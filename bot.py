@@ -230,7 +230,12 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("Este botón rojo solo lo pueden pulsar los admins 😭")
             return
 
-        await update.message.reply_text(random.choice(cortes))
+        corte = random.choice(cortes)
+
+        if update.message.reply_to_message:
+            await update.message.reply_to_message.reply_text(corte)
+        else:
+            await update.message.reply_text(corte)
 
     if mensaje.startswith("!burla") or mensaje.startswith("/burla"):
         texto = mensaje.replace("!burla", "", 1).replace("/burla", "", 1).strip()
