@@ -201,7 +201,7 @@ preguntas_random = [
     "¿Qué persona famosa tendría más probabilidades de acabar en este grupo? 👀"
 ]
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    mensaje = update.message.text.lower()
+    mensaje = update.message.text.lower().strip()
 
     chat_id = update.effective_chat.id
     ultima_actividad[chat_id] = datetime.now()
@@ -216,13 +216,13 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if random.randint(1, 20) == 1:
         await update.message.reply_text(random.choice(preguntas_random))
 
-    if mensaje == "!pregunta":
+    if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
         await update.message.reply_text(random.choice(preguntas))
 
-    if mensaje == "!batalla":
+    if mensaje.startswith("!batalla") or mensaje.startswith("/batalla"):
         await update.message.reply_text(random.choice(batallas))
 
-    if mensaje == "!confesion":
+    if mensaje.startswith("!confesion") or mensaje.startswith("/confesion"):
         await update.message.reply_text(random.choice(confesiones))
 
     if mensaje in ["!corte", "/corte"]:
@@ -404,7 +404,7 @@ async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
                 ultimo_empujon[chat_id] = ahora
 app = Application.builder().token(TOKEN).build()
 
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder))
+app.add_handler(MessageHandler(filters.TEXT, responder))
 
 print("Bot funcionando 😭")
 app.job_queue.run_repeating(revisar_silencios, interval=600, first=600)
