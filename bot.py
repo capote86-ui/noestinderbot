@@ -232,11 +232,19 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(random.choice(cortes))
 
-    if mensaje.startswith("!burla ") or mensaje.startswith("/burla "):
-        texto = mensaje.replace("!burla ", "", 1).replace("/burla ", "", 1)
+    if mensaje.startswith("!burla") or mensaje.startswith("/burla"):
+        texto = mensaje.replace("!burla", "", 1).replace("/burla", "", 1).strip()
+
+        if not texto and update.message.reply_to_message:
+            texto = update.message.reply_to_message.text or ""
+
+        if not texto:
+            await update.message.reply_text("Tienes que escribir algo después de !burla o responder a un mensaje 😭")
+            return
 
         burla = (
-            texto.replace("a", "i")
+            texto.lower()
+            .replace("a", "i")
             .replace("e", "i")
             .replace("o", "i")
             .replace("u", "i")
