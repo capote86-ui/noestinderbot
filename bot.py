@@ -3,6 +3,8 @@ from telegram import Update
 from telegram.ext import ContextTypes
 import random
 
+from datetime import datetime, timedelta
+
 TOKEN = "8996485412:AAEtyvBbfY4nuIBo1XTYe6lajs1f1Oigh5g"
 
 respuestas = {
@@ -197,7 +199,8 @@ preguntas_random = [
 
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje = update.message.text.lower()
-
+chat_id = update.effective_chat.id
+    ultima_actividad[chat_id] = datetime.now()
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
@@ -279,6 +282,11 @@ confesiones = [
     "¿Qué excusa has usado para escapar de alguien? 😭",
     "¿Qué cosa haces y jamás admitirías en persona? 💀",
 
+ultima_actividad = {}
+ultimo_empujon = {}
+
+MINUTOS_SILENCIO = 45
+    
 if mensaje == "!pregunta":
     await update.message.reply_text(random.choice(preguntas))
 
@@ -288,10 +296,25 @@ if mensaje == "!batalla":
 if mensaje == "!confesion":
     await update.message.reply_text(random.choice(confesiones))
 
+async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
+    ahora = datetime.now()
+
+    for chat_id, ultima in list(ultima_actividad.items()):
+        tiempo_silencio = ahora - ultima
+        ultimo_aviso = ultimo_empujon.get(chat_id)
+
+        if tiempo_silencio >= timedelta(minutes=MINUTOS_SILENCIO):
+            if not ultimo_aviso or ahora - ultimo_aviso >= timedelta(minutes=MINUTOS_SILENCIO):
+                pregunta = random.choice(preguntas_random)
+                await context.bot.send_message(
+                    chat_id=chat_id,
+                    text=f"El grupo lleva un rato demasiado tranquilo 😭\n\n{pregunta}"
+                )
+                ultimo_empujon[chat_id] = ahora
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder))
 
 print("Bot funcionando 😭")
-
+app.job_queue.run_repeating(revisar_silencios, interval=600, first=600)
 app.run_polling()
