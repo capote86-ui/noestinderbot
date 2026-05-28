@@ -196,7 +196,6 @@ preguntas_random = [
     "¿Qué tema jamás debería tocarse después de las 2am? 💀",
     "¿Qué persona famosa tendría más probabilidades de acabar en este grupo? 👀"
 ]
-
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje = update.message.text.lower()
 chat_id = update.effective_chat.id
