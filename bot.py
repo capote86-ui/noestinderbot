@@ -205,7 +205,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 usuario = update.effective_user.first_name or "Alguien"
 historial_chats[chat_id].append((usuario, mensaje))
 
-    for trigger in respuestas:
+for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
             await update.message.reply_text(respuesta)
