@@ -198,9 +198,6 @@ preguntas_random = [
 ]
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje = update.message.text.lower()
-chat_id = update.effective_chat.id
-    async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    mensaje = update.message.text.lower()
 
     chat_id = update.effective_chat.id
     ultima_actividad[chat_id] = datetime.now()
