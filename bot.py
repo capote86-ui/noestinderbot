@@ -221,6 +221,28 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if mensaje == "!confesion":
         await update.message.reply_text(random.choice(confesiones))
+
+    if mensaje in ["!corte", "/corte"]:
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        if update.effective_user.id not in admin_ids:
+            await update.message.reply_text("Este botón rojo solo lo pueden pulsar los admins 😭")
+            return
+
+        await update.message.reply_text(random.choice(cortes))
+
+    if mensaje.startswith("!burla ") or mensaje.startswith("/burla "):
+        texto = mensaje.replace("!burla ", "", 1).replace("/burla ", "", 1)
+
+        burla = (
+            texto.replace("a", "i")
+            .replace("e", "i")
+            .replace("o", "i")
+            .replace("u", "i")
+        )
+
+        await update.message.reply_text(f"🫵 {burla} 😭")
     if mensaje in ["!resumen", "/resumen"]:
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
@@ -335,7 +357,16 @@ confesiones = [
     "¿Qué excusa has usado para escapar de alguien? 😭",
     "¿Qué cosa haces y jamás admitirías en persona? 💀",
 ]
-   
+cortes = [
+    "🚨 Alerta de intensidad innecesaria. Aquí se socializa, no se abre casting para OnlyFans.",
+    "📸 Intercambio de fotos no solicitado detectado. Respira, hidrátate y compórtate como una persona funcional.",
+    "🛑 Este grupo no es Wallapop emocional ni mercado negro de fotos.",
+    "🚓 La patrulla antirraro ha sido avisada. Baja dos cambios.",
+    "💀 Se ruega guardar la energía de depredador de Telegram en una carpeta y no traerla aquí.",
+    "📢 Recordatorio amable: sin privados raros, sin pedir fotos y sin vender contenido. Qué locura pedir lo básico.",
+    "🧯 Apagando incendio de cringe. Siguiente intento raro será gestionado por administración."
+]
+
 ultima_actividad = {}
 ultimo_empujon = {}
 
