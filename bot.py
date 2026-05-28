@@ -283,12 +283,7 @@ confesiones = [
     "¿Qué excusa has usado para escapar de alguien? 😭",
     "¿Qué cosa haces y jamás admitirías en persona? 💀",
 ]
-
-ultima_actividad = {}
-ultimo_empujon = {}
-
-MINUTOS_SILENCIO = 45
-    
+   
 if mensaje == "!pregunta":
     await update.message.reply_text(random.choice(preguntas))
 
@@ -297,6 +292,11 @@ if mensaje == "!batalla":
 
 if mensaje == "!confesion":
     await update.message.reply_text(random.choice(confesiones))
+
+ultima_actividad = {}
+ultimo_empujon = {}
+
+MINUTOS_SILENCIO = 45
 
 async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
     ahora = datetime.now()
