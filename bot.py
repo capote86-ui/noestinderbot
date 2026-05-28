@@ -210,6 +210,15 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if random.randint(1, 20) == 1:
         await update.message.reply_text(random.choice(preguntas_random))
 
+    if mensaje == "!pregunta":
+        await update.message.reply_text(random.choice(preguntas))
+
+    if mensaje == "!batalla":
+        await update.message.reply_text(random.choice(batallas))
+
+    if mensaje == "!confesion":
+        await update.message.reply_text(random.choice(confesiones))
+
 preguntas = [
     "¿Qué red flag todo el mundo normaliza y tú no soportas? 🚩",
     "¿Cuál ha sido tu peor primera impresión de alguien? 😭",
@@ -284,15 +293,6 @@ confesiones = [
     "¿Qué cosa haces y jamás admitirías en persona? 💀",
 ]
    
-if mensaje == "!pregunta":
-    await update.message.reply_text(random.choice(preguntas))
-
-if mensaje == "!batalla":
-    await update.message.reply_text(random.choice(batallas))
-
-if mensaje == "!confesion":
-    await update.message.reply_text(random.choice(confesiones))
-
 ultima_actividad = {}
 ultimo_empujon = {}
 
