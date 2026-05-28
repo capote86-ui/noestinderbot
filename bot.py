@@ -202,8 +202,8 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     chat_id = update.effective_chat.id
     ultima_actividad[chat_id] = datetime.now()
-usuario = update.effective_user.first_name or "Alguien"
-historial_chats[chat_id].append((usuario, mensaje))
+    usuario = update.effective_user.first_name or "Alguien"
+    historial_chats[chat_id].append((usuario, mensaje))
 
     for trigger in respuestas:
         if trigger in mensaje:
