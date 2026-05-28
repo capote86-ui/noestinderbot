@@ -282,6 +282,7 @@ confesiones = [
     "¿Cuál ha sido tu peor cita? 👀",
     "¿Qué excusa has usado para escapar de alguien? 😭",
     "¿Qué cosa haces y jamás admitirías en persona? 💀",
+]
 
 ultima_actividad = {}
 ultimo_empujon = {}
