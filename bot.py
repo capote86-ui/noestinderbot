@@ -4,6 +4,7 @@ from telegram.ext import ContextTypes
 import random
 
 from datetime import datetime, timedelta
+from collections import defaultdict, deque, Counter
 
 TOKEN = "8996485412:AAEtyvBbfY4nuIBo1XTYe6lajs1f1Oigh5g"
 
@@ -201,6 +202,8 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     chat_id = update.effective_chat.id
     ultima_actividad[chat_id] = datetime.now()
+usuario = update.effective_user.first_name or "Alguien"
+historial_chats[chat_id].append((usuario, mensaje))
 
     for trigger in respuestas:
         if trigger in mensaje:
@@ -218,7 +221,47 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if mensaje == "!confesion":
         await update.message.reply_text(random.choice(confesiones))
+    if mensaje in ["!resumen", "/resumen"]:
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
 
+        if update.effective_user.id not in admin_ids:
+            await update.message.reply_text("Este resumen solo lo pueden pedir los admins, cotilla autorizado no detectado 😭")
+            return
+
+        mensajes = list(historial_chats[chat_id])
+
+        if not mensajes:
+            await update.message.reply_text("No tengo suficiente drama acumulado todavía 😭")
+            return
+
+        total = len(mensajes)
+        usuarios = [u for u, m in mensajes]
+        top_usuarios = Counter(usuarios).most_common(3)
+
+        risas = sum(1 for u, m in mensajes if "jaj" in m or "😂" in m)
+        tinder = sum(1 for u, m in mensajes if "tinder" in m)
+        hambre = sum(1 for u, m in mensajes if "hambre" in m or "comer" in m)
+        aburrimiento = sum(1 for u, m in mensajes if "aburr" in m or "muerto" in m)
+
+        top_texto = "\n".join([f"• {nombre}: {cantidad} mensajes" for nombre, cantidad in top_usuarios])
+
+        resumen = f"""📜 Resumen del caos reciente:
+
+Se han soltado {total} mensajes desde que empecé a tomar nota.
+
+Personas más activas:
+{top_texto}
+
+Indicadores del drama:
+• Risas detectadas: {risas}
+• Menciones a Tinder: {tinder}
+• Hambre existencial: {hambre}
+• Señales de grupo muerto: {aburrimiento}
+
+Conclusión: el grupo sigue vivo, aunque a ratos necesita respiración asistida 😭"""
+
+        await update.message.reply_text(resumen)
 preguntas = [
     "¿Qué red flag todo el mundo normaliza y tú no soportas? 🚩",
     "¿Cuál ha sido tu peor primera impresión de alguien? 😭",
@@ -297,7 +340,7 @@ ultima_actividad = {}
 ultimo_empujon = {}
 
 MINUTOS_SILENCIO = 45
-
+historial_chats = defaultdict(lambda: deque(maxlen=120))
 async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
     ahora = datetime.now()
 
