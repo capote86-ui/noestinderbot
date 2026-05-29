@@ -66,11 +66,6 @@ respuestas = {
         "Probablemente sí, pero nadie quiere escribir primero 💀"
     ],
 
-    "jajaj": [
-        "Me alegra entreteneros 😭",
-        "Risas detectadas. Seguimos operativos 💀"
-    ],
-
     "xd": [
         "2009 vibes detectadas 😭",
         "Ese xd viene con historia 💀"
@@ -245,12 +240,12 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(resumen)
     for trigger in respuestas:
-        if trigger in mensaje:
-            respuesta = random.choice(respuestas[trigger])
-            await update.message.reply_text(respuesta)
-            return
+    if trigger in mensaje:
+        respuesta = random.choice(respuestas[trigger])
+        await update.message.reply_text(respuesta)
+        return
 
-    if random.randint(1, 20) == 1:
+    if random.randint(1, 300) == 1:
         await update.message.reply_text(random.choice(preguntas_random))
 
     if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
