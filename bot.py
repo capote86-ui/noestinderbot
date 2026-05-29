@@ -92,11 +92,6 @@ respuestas = {
         "Duró menos que una conversación en Tinder 😭"
     ],
 
-    "ola": [
-        "El espíritu del 2012 vive 😭",
-        "K ase criatura 💀"
-    ],
-
     "ayuda": [
         "No somos psicólogos pero hacemos lo que podemos 😭",
         "Describe tu evento canónico 💀"
@@ -209,9 +204,10 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     historial_chats[chat_id].append((usuario, mensaje))
 
     for trigger in respuestas:
-        if trigger in mensaje:
-            respuesta = random.choice(respuestas[trigger])
-            await update.message.reply_text(respuesta)
+    if trigger in mensaje:
+        respuesta = random.choice(respuestas[trigger])
+        await update.message.reply_text(respuesta)
+        return
 
     if random.randint(1, 20) == 1:
         await update.message.reply_text(random.choice(preguntas_random))
