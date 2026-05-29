@@ -259,7 +259,9 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         await update.message.reply_text(f"🫵 {burla} 😭")
-    if mensaje in ["!resumen", "/resumen"]:
+        
+    if mensaje.startswith("!resumen") or mensaje.startswith("/resumen"):
+        
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
