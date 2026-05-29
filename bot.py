@@ -10,7 +10,7 @@ import os
 
 TOKEN = "8996485412:AAEtyvBbfY4nuIBo1XTYe6lajs1f1Oigh5g"
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
+print("API:", os.getenv("OPENAI_API_KEY"))
 respuestas = {
     "hola": [
         "Buenas criaturas 😭",
