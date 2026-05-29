@@ -239,7 +239,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         resumen = respuesta.choices[0].message.content
 
         await update.message.reply_text(resumen)
-    for trigger in respuestas:
+for trigger in respuestas:
     if trigger in mensaje:
         respuesta = random.choice(respuestas[trigger])
         await update.message.reply_text(respuesta)
