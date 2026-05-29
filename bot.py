@@ -203,6 +203,47 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     usuario = update.effective_user.first_name or "Alguien"
     historial_chats[chat_id].append((usuario, mensaje))
 
+    if mensaje.startswith("!resumen") or mensaje.startswith("/resumen"):
+        
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        if update.effective_user.id not in admin_ids:
+            await update.message.reply_text("Este resumen solo lo pueden pedir los admins 😭")
+            return
+
+        mensajes = list(historial_chats[chat_id])
+
+        if not mensajes:
+            await update.message.reply_text("No tengo suficiente salseo acumulado todavía 😭")
+            return
+
+        conversacion = "\n".join(
+            [f"{usuario}: {texto}" for usuario, texto in mensajes]
+        )
+
+        respuesta = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Eres un narrador sarcástico y gracioso que resume conversaciones "
+                        "de grupos de Telegram de forma divertida, mencionando usuarios y "
+                        "explicando los temas hablados como si fuera un documental del caos."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": f"Resume esta conversación:\n\n{conversacion}"
+                }
+            ],
+            max_tokens=300
+        )
+
+        resumen = respuesta.choices[0].message.content
+
+        await update.message.reply_text(resumen)
     for trigger in respuestas:
     if trigger in mensaje:
         respuesta = random.choice(respuestas[trigger])
@@ -256,47 +297,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(f"🫵 {burla} 😭")
         
-    if mensaje.startswith("!resumen") or mensaje.startswith("/resumen"):
-        
-        admins = await context.bot.get_chat_administrators(chat_id)
-        admin_ids = [admin.user.id for admin in admins]
-
-        if update.effective_user.id not in admin_ids:
-            await update.message.reply_text("Este resumen solo lo pueden pedir los admins 😭")
-            return
-
-        mensajes = list(historial_chats[chat_id])
-
-        if not mensajes:
-            await update.message.reply_text("No tengo suficiente salseo acumulado todavía 😭")
-            return
-
-        conversacion = "\n".join(
-            [f"{usuario}: {texto}" for usuario, texto in mensajes]
-        )
-
-        respuesta = client.chat.completions.create(
-            model="gpt-4.1-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "Eres un narrador sarcástico y gracioso que resume conversaciones "
-                        "de grupos de Telegram de forma divertida, mencionando usuarios y "
-                        "explicando los temas hablados como si fuera un documental del caos."
-                    )
-                },
-                {
-                    "role": "user",
-                    "content": f"Resume esta conversación:\n\n{conversacion}"
-                }
-            ],
-            max_tokens=300
-        )
-
-        resumen = respuesta.choices[0].message.content
-
-        await update.message.reply_text(resumen)
+    
 preguntas = [
     "¿Qué red flag todo el mundo normaliza y tú no soportas? 🚩",
     "¿Cuál ha sido tu peor primera impresión de alguien? 😭",
