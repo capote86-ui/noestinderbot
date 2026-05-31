@@ -262,7 +262,7 @@ if not texto:
         await update.message.reply_text("Tienes que escribir algo después de !burla o responder a un mensaje 😭")
         return
 
-    burla = (
+burla = (
             texto.lower()
             .replace("a", "i")
             .replace("e", "i")
