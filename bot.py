@@ -191,7 +191,31 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ultima_actividad[chat_id] = datetime.now()
     usuario = update.effective_user.first_name or "Alguien"
     historial_chats[chat_id].append((usuario, mensaje))
+user_id = update.effective_user.id
+    nombres_usuarios[user_id] = usuario
 
+    contador_mensajes[user_id] = contador_mensajes.get(user_id, 0) + 1
+    ultimo_mensaje_usuario[user_id] = datetime.now()
+
+    if user_id not in mensajes_usuario:
+        mensajes_usuario[user_id] = []
+
+    mensajes_usuario[user_id].append(mensaje)
+
+    if len(mensajes_usuario[user_id]) > 80:
+        mensajes_usuario[user_id] = mensajes_usuario[user_id][-80:]
+
+    palabras_presentacion = [
+        "soy ",
+        "me llamo",
+        "tengo ",
+        "soy de",
+        "vivo en",
+        "me presento"
+    ]
+
+    if any(p in mensaje for p in palabras_presentacion):
+        usuarios_presentados[user_id] = True
 
     for trigger in respuestas:
         if trigger in mensaje:
