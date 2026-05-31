@@ -221,8 +221,8 @@ if any(p in mensaje for p in palabras_presentacion):
 for trigger in respuestas:
     if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
-            await update.message.reply_text(respuesta)
-            return
+        await update.message.reply_text(respuesta)
+        return
 
 if random.randint(1, 300) == 1:
         await update.message.reply_text(random.choice(preguntas_random))
