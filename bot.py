@@ -279,7 +279,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
         await update.message.reply_text(f"🫵 {burla} 😭")
-        return
+        return 
         
     
 preguntas = [
