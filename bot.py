@@ -241,7 +241,7 @@ if mensaje.startswith("!confesion") or mensaje.startswith("/confesion"):
 
         if update.effective_user.id not in admin_ids:
             await update.message.reply_text("Este botón rojo solo lo pueden pulsar los admins 😭")
-            return
+            
 
         corte = random.choice(cortes)
 
