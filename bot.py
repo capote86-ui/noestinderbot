@@ -262,15 +262,15 @@ if mensaje.startswith("!burla") or mensaje.startswith("/burla"):
             await update.message.reply_text("Tienes que escribir algo después de !burla o responder a un mensaje 😭")
             return
 
-        burla = (
+    burla = (
             texto.lower()
             .replace("a", "i")
             .replace("e", "i")
             .replace("o", "i")
             .replace("u", "i")
-        )
+    )
 
-        await update.message.reply_text(f"🫵 {burla} 😭")
+    await update.message.reply_text(f"🫵 {burla} 😭")
         
     
 preguntas = [
