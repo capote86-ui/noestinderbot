@@ -270,7 +270,7 @@ burla = (
             .replace("u", "i")
     )
 
-        await update.message.reply_text(f"🫵 {burla} 😭")
+await update.message.reply_text(f"🫵 {burla} 😭")
         
     
 preguntas = [
