@@ -223,29 +223,29 @@ for trigger in respuestas:
             await update.message.reply_text(respuesta)
             return
 
-    if random.randint(1, 300) == 1:
+if random.randint(1, 300) == 1:
         await update.message.reply_text(random.choice(preguntas_random))
 
-    if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
+if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
         await update.message.reply_text(random.choice(preguntas))
 
-    if mensaje.startswith("!batalla") or mensaje.startswith("/batalla"):
+if mensaje.startswith("!batalla") or mensaje.startswith("/batalla"):
         await update.message.reply_text(random.choice(batallas))
 
-    if mensaje.startswith("!confesion") or mensaje.startswith("/confesion"):
+if mensaje.startswith("!confesion") or mensaje.startswith("/confesion"):
         await update.message.reply_text(random.choice(confesiones))
 
-    if mensaje in ["!corte", "/corte"]:
+if mensaje in ["!corte", "/corte"]:
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
-        if update.effective_user.id not in admin_ids:
+    if update.effective_user.id not in admin_ids:
             await update.message.reply_text("Este botón rojo solo lo pueden pulsar los admins 😭")
             return
 
         corte = random.choice(cortes)
 
-        if update.message.reply_to_message:
+    if update.message.reply_to_message:
             await update.message.reply_to_message.reply_text(corte)
         else:
             await update.message.reply_text(corte)
