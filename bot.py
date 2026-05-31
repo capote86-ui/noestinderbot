@@ -240,24 +240,24 @@ if mensaje in ["!corte", "/corte"]:
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
-    if update.effective_user.id not in admin_ids:
-            await update.message.reply_text("Este botón rojo solo lo pueden pulsar los admins 😭")
+if update.effective_user.id not in admin_ids:
+        await update.message.reply_text("Este botón rojo solo lo pueden pulsar los admins 😭")
             return
 
         corte = random.choice(cortes)
 
-    if update.message.reply_to_message:
-            await update.message.reply_to_message.reply_text(corte)
+if update.message.reply_to_message:
+        await update.message.reply_to_message.reply_text(corte)
         else:
-            await update.message.reply_text(corte)
+        await update.message.reply_text(corte)
 
-    if mensaje.startswith("!burla") or mensaje.startswith("/burla"):
+if mensaje.startswith("!burla") or mensaje.startswith("/burla"):
         texto = mensaje.replace("!burla", "", 1).replace("/burla", "", 1).strip()
 
-        if not texto and update.message.reply_to_message:
+    if not texto and update.message.reply_to_message:
             texto = update.message.reply_to_message.text or ""
 
-        if not texto:
+    if not texto:
             await update.message.reply_text("Tienes que escribir algo después de !burla o responder a un mensaje 😭")
             return
 
