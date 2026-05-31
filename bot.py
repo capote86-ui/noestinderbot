@@ -22,6 +22,7 @@ respuestas = {
     "buenas tardes": [
         "Buenas tardes, habitantes del caos 😭",
         "La productividad murió, pero nosotros seguimos 💀"
+        "Buenas tardes a los presentes y a los mirones 👀"
     ],
 
     "buenas noches": [
