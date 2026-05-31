@@ -335,6 +335,11 @@ ultimo_empujon = {}
 
 MINUTOS_SILENCIO = 45
 historial_chats = defaultdict(lambda: deque(maxlen=120))
+contador_mensajes = {}
+ultimo_mensaje_usuario = {}
+nombres_usuarios = {}
+usuarios_presentados = {}
+mensajes_usuario = {}
 async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
     ahora = datetime.now()
 
