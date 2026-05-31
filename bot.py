@@ -255,12 +255,12 @@ if mensaje in ["!corte", "/corte"]:
 if mensaje.startswith("!burla") or mensaje.startswith("/burla"):
         texto = mensaje.replace("!burla", "", 1).replace("/burla", "", 1).strip()
 
-    if not texto and update.message.reply_to_message:
-            texto = update.message.reply_to_message.text or ""
+if not texto and update.message.reply_to_message:
+        texto = update.message.reply_to_message.text or ""
 
-    if not texto:
-            await update.message.reply_text("Tienes que escribir algo después de !burla o responder a un mensaje 😭")
-            return
+if not texto:
+        await update.message.reply_text("Tienes que escribir algo después de !burla o responder a un mensaje 😭")
+        return
 
     burla = (
             texto.lower()
