@@ -231,18 +231,25 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
         await update.message.reply_text(random.choice(preguntas))
 
-if mensaje.startswith("!batalla") or mensaje.startswith("/batalla"):
-        await update.message.reply_text(random.choice(batallas))
+    if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
+        await update.message.reply_text(random.choice(preguntas))
+        return
 
-if mensaje.startswith("!confesion") or mensaje.startswith("/confesion"):
+    if mensaje.startswith("!batalla") or mensaje.startswith("/batalla"):
+        await update.message.reply_text(random.choice(batallas))
+        return
+
+    if mensaje.startswith("!confesion") or mensaje.startswith("/confesion"):
         await update.message.reply_text(random.choice(confesiones))
-if mensaje in ["!corte", "/corte"]:
+        return
+
+    if mensaje in ["!corte", "/corte"]:
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
         if update.effective_user.id not in admin_ids:
             await update.message.reply_text("Este botón rojo solo lo pueden pulsar los admins 😭")
-            
+            return
 
         corte = random.choice(cortes)
 
