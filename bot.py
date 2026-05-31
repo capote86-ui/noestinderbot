@@ -235,7 +235,7 @@ if mensaje.startswith("!batalla") or mensaje.startswith("/batalla"):
 
 if mensaje.startswith("!confesion") or mensaje.startswith("/confesion"):
         await update.message.reply_text(random.choice(confesiones))
-    if mensaje in ["!corte", "/corte"]:
+if mensaje in ["!corte", "/corte"]:
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
