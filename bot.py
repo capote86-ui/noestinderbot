@@ -219,7 +219,7 @@ if any(p in mensaje for p in palabras_presentacion):
         usuarios_presentados[user_id] = True
 
 for trigger in respuestas:
-        if trigger in mensaje:
+    if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
             await update.message.reply_text(respuesta)
             return
