@@ -504,6 +504,56 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
+
+    if mensaje.startswith("!limpieza") or mensaje.startswith("/limpieza"):
+
+        sin_presentar = []
+        poco_activos = []
+        inactivos = []
+
+        ahora = datetime.now()
+
+        for uid, nombre in nombres_usuarios.items():
+
+            total = contador_mensajes.get(uid, 0)
+            presentado = usuarios_presentados.get(uid, False)
+            ultimo = ultimo_mensaje_usuario.get(uid)
+
+            if not presentado:
+                sin_presentar.append(nombre)
+
+            if total < 3:
+                poco_activos.append((nombre, total))
+
+            if ultimo:
+                dias = int((ahora - ultimo).total_seconds() // 86400)
+
+                if dias >= 7:
+                    inactivos.append((nombre, dias))
+
+        texto = "🧹 INFORME DE LIMPIEZA\n\n"
+
+        texto += f"👀 Sin presentar: {len(sin_presentar)}\n"
+        texto += f"🗿 Menos de 3 mensajes: {len(poco_activos)}\n"
+        texto += f"👻 Inactivos (+7 días): {len(inactivos)}\n\n"
+
+        if sin_presentar:
+            texto += "📌 Pendientes de presentación:\n"
+            for nombre in sin_presentar[:10]:
+                texto += f"• {nombre}\n"
+
+        if poco_activos:
+            texto += "\n🗿 Modo decoración:\n"
+            for nombre, total in poco_activos[:10]:
+                texto += f"• {nombre} ({total} mensajes)\n"
+
+        if inactivos:
+            texto += "\n👻 Fantasmas:\n"
+            for nombre, dias in inactivos[:10]:
+                texto += f"• {nombre} ({dias} días)\n"
+
+        await update.message.reply_text(texto)
+        return
     
     for trigger in respuestas:
         if trigger in mensaje:
