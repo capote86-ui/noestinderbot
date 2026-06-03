@@ -720,7 +720,7 @@ cortes = [
 ultima_actividad = {}
 ultimo_empujon = {}
 
-MINUTOS_SILENCIO = 240
+MINUTOS_SILENCIO = 180
 historial_chats = defaultdict(lambda: deque(maxlen=120))
 contador_mensajes = {}
 ultimo_mensaje_usuario = {}
@@ -729,7 +729,11 @@ usuarios_presentados = {}
 mensajes_usuario = {}
 async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
     ahora = datetime.now()
+    hora = ahora.hour
 
+    if hora >= 23 or hora < 8:
+        return
+    
     for chat_id, ultima in list(ultima_actividad.items()):
         tiempo_silencio = ahora - ultima
         ultimo_aviso = ultimo_empujon.get(chat_id)
