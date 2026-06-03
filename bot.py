@@ -335,6 +335,54 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
+    if mensaje.startswith("!analiza") or mensaje.startswith("/analiza"):
+        partes = mensaje.split(maxsplit=1)
+
+        if len(partes) < 2:
+            await update.message.reply_text("Dime a quién analizo. Ejemplo: !analiza Pedro")
+            return
+
+        buscado = partes[1].lower()
+        encontrado = None
+
+        for uid, nombre in nombres_usuarios.items():
+            if buscado in nombre.lower():
+                encontrado = uid
+                break
+
+        if not encontrado:
+            await update.message.reply_text("No encuentro suficiente material de esa criatura 😭")
+            return
+
+        nombre = nombres_usuarios.get(encontrado, "Alguien misterioso")
+        textos_usuario = mensajes_usuario.get(encontrado, [])[-30:]
+
+        if not textos_usuario:
+            await update.message.reply_text("No tengo suficiente historial para analizar a este espécimen 😭")
+            return
+
+        conversacion = "\n".join(textos_usuario)
+
+        respuesta_ia = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Eres una IA sarcástica, divertida y con mala leche elegante. Analizas usuarios de un grupo de Telegram sin ser cruel ni insultar de forma grave. Sé breve, cómica y directa."
+                },
+                {
+                    "role": "user",
+                    "content": f"Analiza de forma divertida a {nombre} según estos últimos mensajes:\n\n{conversacion}"
+                }
+            ],
+            max_tokens=180
+        )
+
+        analisis = respuesta_ia.choices[0].message.content
+
+        await update.message.reply_text(f"🧠 Análisis de {nombre}\n\n{analisis}")
+        return
+    
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
