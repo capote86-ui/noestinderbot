@@ -76,12 +76,6 @@ respuestas = {
         "Intentando mantener este grupo vivo 💀"
     ],
 
-    "me voy": [
-        "Otro caído en combate social 😔",
-        "No soportó la interacción humana 💀",
-        "Duró menos que una conversación en Tinder 😭"
-    ],
-
     "ayuda": [
         "No somos psicólogos pero hacemos lo que podemos 😭",
         "Describe tu evento canónico 💀"
@@ -275,8 +269,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
-
-        if mensaje.startswith("!ficha") or mensaje.startswith("/ficha"):
+    if mensaje.startswith("!ficha") or mensaje.startswith("/ficha"):
         partes = mensaje.split(maxsplit=1)
 
         if len(partes) < 2:
@@ -323,6 +316,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🔥 Nivel de presencia: {nivel}"
         )
         return
+        
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
