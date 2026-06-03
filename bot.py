@@ -248,7 +248,33 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
-    
+        if mensaje.startswith("!fantasmas") or mensaje.startswith("/fantasmas"):
+        if not ultimo_mensaje_usuario:
+            await update.message.reply_text("Todavía no tengo fantasmas fichados 👻")
+            return
+
+        ahora = datetime.now()
+        fantasmas = []
+
+        for uid, fecha in ultimo_mensaje_usuario.items():
+            horas = int((ahora - fecha).total_seconds() // 3600)
+
+            if horas >= 24:
+                nombre = nombres_usuarios.get(uid, "Alguien misterioso")
+                dias = horas // 24
+                fantasmas.append((nombre, dias))
+
+        if not fantasmas:
+            await update.message.reply_text("De momento no hay fantasmas. Milagro social 👻")
+            return
+
+        texto = "👻 Desaparecidos en combate\n\n"
+
+        for nombre, dias in sorted(fantasmas, key=lambda x: x[1], reverse=True)[:10]:
+            texto += f"• {nombre} - {dias} días sin hablar\n"
+
+        await update.message.reply_text(texto)
+        return
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
