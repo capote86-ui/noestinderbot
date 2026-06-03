@@ -438,6 +438,57 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
+    if mensaje.startswith("!vigilar") or mensaje.startswith("/vigilar"):
+
+        sin_presentar = []
+        poco_activos = []
+        inactivos = []
+
+        ahora = datetime.now()
+
+        for uid, nombre in nombres_usuarios.items():
+            total = contador_mensajes.get(uid, 0)
+            presentado = usuarios_presentados.get(uid, False)
+            ultimo = ultimo_mensaje_usuario.get(uid)
+
+            if not presentado:
+                sin_presentar.append(nombre)
+
+            if total < 3:
+                poco_activos.append((nombre, total))
+
+            if ultimo:
+                dias = int((ahora - ultimo).total_seconds() // 86400)
+                if dias >= 7:
+                    inactivos.append((nombre, dias))
+
+        texto = "👮 Informe de vigilancia\n\n"
+
+        texto += "📌 Sin presentar:\n"
+        if sin_presentar:
+            for nombre in sin_presentar[:10]:
+                texto += f"• {nombre}\n"
+        else:
+            texto += "• Nadie pendiente. Milagro administrativo.\n"
+
+        texto += "\n🫥 Con menos de 3 mensajes:\n"
+        if poco_activos:
+            for nombre, total in poco_activos[:10]:
+                texto += f"• {nombre} — {total} mensajes\n"
+        else:
+            texto += "• Nadie en modo estatua.\n"
+
+        texto += "\n👻 Inactivos +7 días:\n"
+        if inactivos:
+            for nombre, dias in inactivos[:10]:
+                texto += f"• {nombre} — {dias} días sin hablar\n"
+        else:
+            texto += "• Sin fantasmas graves por ahora.\n"
+
+        texto += "\nResumen: si alguien aparece en las tres listas, huele a decoración de grupo 😭"
+
+        await update.message.reply_text(texto)
+        return
     
     for trigger in respuestas:
         if trigger in mensaje:
