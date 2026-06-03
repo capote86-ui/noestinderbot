@@ -275,6 +275,54 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
+
+        if mensaje.startswith("!ficha") or mensaje.startswith("/ficha"):
+        partes = mensaje.split(maxsplit=1)
+
+        if len(partes) < 2:
+            await update.message.reply_text("Dime de quién quieres la ficha. Ejemplo: !ficha Pedro")
+            return
+
+        buscado = partes[1].lower()
+        encontrado = None
+
+        for uid, nombre in nombres_usuarios.items():
+            if buscado in nombre.lower():
+                encontrado = uid
+                break
+
+        if not encontrado:
+            await update.message.reply_text("No encuentro a esa criatura en mis archivos 😭")
+            return
+
+        nombre = nombres_usuarios.get(encontrado, "Alguien misterioso")
+        total = contador_mensajes.get(encontrado, 0)
+        presentado = "Sí" if usuarios_presentados.get(encontrado) else "No"
+        ultimo = ultimo_mensaje_usuario.get(encontrado)
+
+        if ultimo:
+            horas = int((datetime.now() - ultimo).total_seconds() // 3600)
+            ultimo_texto = f"hace {horas} horas" if horas > 0 else "hace nada"
+        else:
+            ultimo_texto = "no consta"
+
+        if total >= 100:
+            nivel = "protagonista absoluto del reality"
+        elif total >= 50:
+            nivel = "personaje recurrente con trama propia"
+        elif total >= 10:
+            nivel = "secundario con posibilidades"
+        else:
+            nivel = "figurante en prácticas"
+
+        await update.message.reply_text(
+            f"📋 Ficha de {nombre}\n\n"
+            f"🕒 Mensajes enviados: {total}\n"
+            f"🎂 Se presentó: {presentado}\n"
+            f"💬 Último mensaje: {ultimo_texto}\n"
+            f"🔥 Nivel de presencia: {nivel}"
+        )
+        return
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
