@@ -248,8 +248,8 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
-        if mensaje.startswith("!fantasmas") or mensaje.startswith("/fantasmas"):
-    if not ultimo_mensaje_usuario:
+    if mensaje.startswith("!fantasmas") or mensaje.startswith("/fantasmas"):
+        if not ultimo_mensaje_usuario:
             await update.message.reply_text("Todavía no tengo fantasmas fichados 👻")
             return
 
