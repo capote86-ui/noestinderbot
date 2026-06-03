@@ -316,7 +316,25 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🔥 Nivel de presencia: {nivel}"
         )
         return
-        
+
+        if mensaje.startswith("!presentados") or mensaje.startswith("/presentados"):
+        presentados = [
+            nombres_usuarios.get(uid, "Alguien misterioso")
+            for uid in usuarios_presentados
+            if usuarios_presentados.get(uid)
+        ]
+
+        if not presentados:
+            await update.message.reply_text("De momento nadie se ha presentado como Dios manda 😭")
+            return
+
+        texto = "✅ Usuarios que parecen haberse presentado:\n\n"
+
+        for nombre in presentados:
+            texto += f"• {nombre}\n"
+
+        await update.message.reply_text(texto)
+        return
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
