@@ -489,6 +489,21 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
+
+    if mensaje.startswith("!recordatorio") or mensaje.startswith("/recordatorio"):
+
+        texto = (
+            "📢 Recordatorio del grupo\n\n"
+            "Si todavía no te has presentado, hazlo con:\n"
+            "• Nombre\n"
+            "• Edad\n"
+            "• De dónde eres\n\n"
+            "También es obligatorio tener foto de perfil. Puede ser tuya, de una mascota, paisaje, meme o lo que quieras, pero algo que no parezca cuenta fantasma 👻\n\n"
+            "Aquí venimos a charlar, reírnos y conocer gente. Si solo vienes a mirar desde la esquina, al menos trae pipas 😭"
+        )
+
+        await update.message.reply_text(texto)
+        return
     
     for trigger in respuestas:
         if trigger in mensaje:
