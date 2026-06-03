@@ -383,7 +383,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"🧠 Análisis de {nombre}\n\n{analisis}")
         return
 
-        if mensaje.startswith("!normas") or mensaje.startswith("/normas"):
+    if mensaje.startswith("!normas") or mensaje.startswith("/normas"):
 
         texto_normas = (
             "📜 NORMAS DEL GRUPO\n\n"
