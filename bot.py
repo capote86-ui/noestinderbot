@@ -415,6 +415,30 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto_normas)
         return
+    if mensaje.startswith("!sinpresentar") or mensaje.startswith("/sinpresentar"):
+
+        pendientes = []
+
+        for uid, nombre in nombres_usuarios.items():
+            if not usuarios_presentados.get(uid, False):
+                pendientes.append(nombre)
+
+        if not pendientes:
+            await update.message.reply_text(
+                "🎉 Todo el mundo parece haberse presentado. Milagro estadístico."
+            )
+            return
+
+        texto = "👀 Usuarios pendientes de presentación\n\n"
+
+        for nombre in pendientes:
+            texto += f"• {nombre}\n"
+
+        texto += "\n📢 Recordad presentaros con nombre, edad y de dónde sois."
+
+        await update.message.reply_text(texto)
+        return
+    
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
