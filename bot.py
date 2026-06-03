@@ -233,6 +233,22 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
+    if mensaje.startswith("!ranking") or mensaje.startswith("/ranking"):
+        if not contador_mensajes:
+            await update.message.reply_text("Todavía no tengo suficiente cotilleo estadístico 😭")
+            return
+
+        ranking = sorted(contador_mensajes.items(), key=lambda x: x[1], reverse=True)[:10]
+
+        texto = "🏆 Ranking del caos\n\n"
+
+        for i, (uid, total) in enumerate(ranking, start=1):
+            nombre = nombres_usuarios.get(uid, "Alguien misterioso")
+            texto += f"{i}. {nombre} - {total} mensajes\n"
+
+        await update.message.reply_text(texto)
+        return
+    
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
