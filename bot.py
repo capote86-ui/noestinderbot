@@ -720,6 +720,18 @@ cortes = [
 ultima_actividad = {}
 ultimo_empujon = {}
 
+mensajes_silencio = [
+    "👀 ¿Seguís vivos o ya os habéis mudado todos a los privados?",
+    "🪦 Minuto de silencio por esta conversación.",
+    "🤖 Adelaida sospecha que os habéis quedado dormidos.",
+    "📢 Recordatorio: esto es un grupo, no un documental de observación.",
+    "🫥 Hay más gente leyendo que escribiendo. Sospechoso.",
+    "☕ Aprovechad que nadie habla para confesar algún evento canónico.",
+    "🚨 Detectado exceso de espectadores y escasez de protagonistas.",
+    "📡 Buscando señales de vida inteligente...",
+    "🎭 Este grupo tiene más extras que actores ahora mismo.",
+    "👻 Si estáis aquí, haced una señal. Un parpadeo sirve."
+]
 MINUTOS_SILENCIO = 180
 historial_chats = defaultdict(lambda: deque(maxlen=120))
 contador_mensajes = {}
@@ -741,9 +753,10 @@ async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
         if tiempo_silencio >= timedelta(minutes=MINUTOS_SILENCIO):
             if not ultimo_aviso or ahora - ultimo_aviso >= timedelta(minutes=MINUTOS_SILENCIO):
                 pregunta = random.choice(preguntas_random)
+                mensaje_silencio = random.choice(mensajes_silencio)
                 await context.bot.send_message(
                     chat_id=chat_id,
-                    text=f"El grupo lleva un rato demasiado tranquilo 😭\n\n{pregunta}"
+                    text=f"{mensaje_silencio}\n\n{pregunta}"
                 )
                 ultimo_empujon[chat_id] = ahora
 app = Application.builder().token(TOKEN).build()
