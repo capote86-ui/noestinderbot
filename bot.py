@@ -382,7 +382,39 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(f"🧠 Análisis de {nombre}\n\n{analisis}")
         return
-    
+
+        if mensaje.startswith("!normas") or mensaje.startswith("/normas"):
+
+        texto_normas = (
+            "📜 NORMAS DEL GRUPO\n\n"
+
+            "1️⃣ Presentarte para entrar.\n"
+            "Nombre, edad y de dónde eres.\n\n"
+
+            "2️⃣ Es obligatorio tener foto de perfil.\n"
+            "Las cuentas sin foto podrán ser expulsadas por seguridad y confianza del grupo.\n\n"
+
+            "3️⃣ Respeto ante todo.\n"
+            "Nada de insultos, faltas de respeto, acoso ni comportamientos que generen mal ambiente.\n\n"
+
+            "4️⃣ Prohibido:\n"
+            "• Menores de 18 años.\n"
+            "• Spam y publicidad.\n"
+            "• Venta o promoción de contenido sexual o pornográfico.\n"
+            "• Agregar al privado sin permiso.\n"
+            "• Política, religión y temas que puedan generar conflicto.\n\n"
+
+            "5️⃣ Este grupo está pensado para conocer gente, hacer amistades y pasar un buen rato.\n\n"
+
+            "6️⃣ Si alguien te molesta o incumple las normas, avisa a un moderador o administrador.\n\n"
+
+            "7️⃣ Aquí venimos a charlar, reírnos y mantener un buen ambiente.\n\n"
+
+            "8️⃣ El incumplimiento de las normas puede suponer la expulsión inmediata."
+        )
+
+        await update.message.reply_text(texto_normas)
+        return
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
