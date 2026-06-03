@@ -554,6 +554,22 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
+
+    if mensaje.startswith("!foto") or mensaje.startswith("/foto"):
+
+        texto = (
+            "📸 Recordatorio de foto de perfil\n\n"
+            "Por seguridad y confianza del grupo, es obligatorio tener foto de perfil.\n\n"
+            "No hace falta que sea una foto tuya: puede ser una mascota, un paisaje, un meme, un peluche o lo que quieras.\n\n"
+            "La idea es que la cuenta no parezca un perfil fantasma mirando desde la esquina 👻"
+        )
+
+        if update.message.reply_to_message:
+            await update.message.reply_to_message.reply_text(texto)
+        else:
+            await update.message.reply_text(texto)
+
+        return
     
     for trigger in respuestas:
         if trigger in mensaje:
