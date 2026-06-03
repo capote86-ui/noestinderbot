@@ -318,7 +318,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
         if mensaje.startswith("!presentados") or mensaje.startswith("/presentados"):
-        presentados = [
+            presentados = [
             nombres_usuarios.get(uid, "Alguien misterioso")
             for uid in usuarios_presentados
             if usuarios_presentados.get(uid)
