@@ -600,7 +600,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
 
-    if update.effective_user.id != 1176046170:
+        if update.effective_user.id != 1176046170:
         await update.message.reply_text(
             "🚫 Solo Raquel puede iniciar un '¿Quién es más...?'."
         )
