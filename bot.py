@@ -8,7 +8,7 @@ from collections import defaultdict, deque, Counter
 from openai import OpenAI
 import os
 
-TOKEN = "8996485412:AAEtyvBbfY4nuIBo1XTYe6lajs1f1Oigh5g"
+TOKEN = "8996485412:AAF_SJkLwA3-3xtMUGj59TUJNGcF17J9LV0"
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 print("API:", os.getenv("OPENAI_API_KEY"))
 respuestas = {
