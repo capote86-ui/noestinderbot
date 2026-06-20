@@ -599,20 +599,27 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
-        pregunta = random.choice(preguntas_quienesmas)
 
-        quienesmas_activo[chat_id] = pregunta
-        quienesmas_votos[chat_id] = {}
-
+    if update.effective_user.id != 1176046170:
         await update.message.reply_text(
-            f"👀 ¿Quién es más probable...?\n\n"
-            f"{pregunta}\n\n"
-            f"🗳️ Para votar, escribe el @usuario de la persona elegida.\n"
-            f"Ejemplo: @usuario\n\n"
-            f"Solo cuentan los mensajes que tengan arroba.\n"
-            f"Para cerrar la votación, un admin puede poner /cerrarquienes."
+            "🚫 Solo Raquel puede iniciar un '¿Quién es más...?'."
         )
         return
+
+    pregunta = random.choice(preguntas_quienesmas)
+
+    quienesmas_activo[chat_id] = pregunta
+    quienesmas_votos[chat_id] = {}
+
+    await update.message.reply_text(
+        f"👀 ¿Quién es más probable...?\n\n"
+        f"{pregunta}\n\n"
+        f"🗳️ Para votar, escribe únicamente el @usuario de la persona elegida.\n"
+        f"Ejemplo: @usuario\n\n"
+        f"✅ Solo cuentan los mensajes que contengan un @usuario.\n"
+        f"🛑 Para cerrar la votación utiliza /cerrarquienes"
+    )
+    return
 
     if mensaje.startswith("!cerrarquienes") or mensaje.startswith("/cerrarquienes"):
         admins = await context.bot.get_chat_administrators(chat_id)
