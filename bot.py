@@ -12,97 +12,223 @@ TOKEN = "8996485412:AAF_SJkLwA3-3xtMUGj59TUJNGcF17J9LV0"
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 print("API:", os.getenv("OPENAI_API_KEY"))
 respuestas = {
-    
-    "buenos dias": [
-        "Buenos días, supervivientes de Telegram ☕",
-        "Otro día más evitando red flags 😭",
-        "Buenos días a los presentes y a los que solo observan 👀"
-    ],
 
-    "buenas tardes": [
-        "Buenas tardes, habitantes del caos 😭",
-        "La productividad murió, pero nosotros seguimos 💀"
-        "Buenas tardes a los presentes y a los mirones 👀"
-    ],
+"buenos dias": [
+    "☕ Buenos días. Ya podéis empezar a fingir que sois adultos funcionales.",
+    "🌞 Buenos días, habitantes del caos.",
+    "📢 Reiniciando el servidor humano...",
+    "☕ Café, dignidad y suerte para todos.",
+    "👀 Buenos días a los que escriben y a los que espían.",
+    "😴 ¿Ya estamos despiertos o seguimos negociándolo?",
+    "🌤️ Otro día más evitando responsabilidades.",
+    "📱 Telegram sigue aquí. Nosotros también.",
+    "☕ Buenos días. Que hoy no os toque ningún evento canónico.",
+    "😎 A ver qué desastre colectivo nos espera hoy."
+],
 
-    "buenas noches": [
-        "Descansen, criaturas del caos 😭",
-        "Hora de sobrepensar eventos de 2017 💀",
-        "Que el cringe no les persiga esta noche 👀"
-    ],
+"buenas tardes": [
+    "🌇 Buenas tardes. Ya hemos sobrevivido a media jornada.",
+    "☕ Hora oficial de bajar la productividad.",
+    "😴 Buenas tardes a los presentes y a los que deberían estar trabajando.",
+    "📢 Se abre el turno de procrastinación.",
+    "🌤️ Buenas tardes, criaturas del algoritmo.",
+    "👀 Los observadores silenciosos siguen ahí.",
+    "🍿 ¿Qué drama nos perdimos hoy?",
+    "😎 Siguen sin pagarnos por estar aquí.",
+    "🫠 Ya es tarde para ser productivos.",
+    "☀️ Aún quedan horas para tomar malas decisiones."
+],
 
-    "tinder": [
-        "🚨 Trauma detectado 🚨",
-        "Aquí intentamos recuperarnos de eso 😭",
-        "Palabra prohibida en territorio seguro 💀"
-    ],
+"buenas noches": [
+    "🌙 Buenas noches. Que vuestros pensamientos os dejen dormir.",
+    "😴 Hora de apagar el cerebro. O intentarlo.",
+    "🌜 Descansen, leyendas del desastre.",
+    "🛌 No reviséis conversaciones antiguas.",
+    "👀 Que el cringe del pasado no os visite esta noche.",
+    "💀 Hora de recordar momentos vergonzosos aleatorios.",
+    "🌙 Cerrando sesión hasta nuevo aviso.",
+    "😴 No alimentéis pensamientos intrusivos.",
+    "🛸 Si os secuestran extraterrestres, avisad mañana.",
+    "🌌 El caos seguirá aquí al despertar."
+],
 
-    "me aburr": [
-        "Pues habla 😭",
-        "Literalmente estás en un grupo de Telegram 💀",
-        "El entretenimiento eres tú 👀"
-    ],
+"hola": [
+    "👋 Educación detectada.",
+    "😎 Bienvenido al caos organizado.",
+    "📢 Presencia humana confirmada.",
+    "👀 Hola. Ya puedes empezar a cotillear.",
+    "🤝 Saludos, ciudadano."
+],
 
-    "grupo muerto": [
-        "Está hibernando 😭",
-        "Silencio administrativo detectado 💀",
-        "La gente está leyendo escondida 👀"
-    ],
+"hola buenas": [
+    "👋 Educación premium detectada.",
+    "😎 Bienvenido al caos organizado.",
+    "📢 Buenos modales localizados.",
+    "👀 Ya puedes empezar a cotillear."
+],
 
-    "tengo hambre": [
-        "Pide comida y comparte 😭",
-        "Todos pensando en pizza otra vez 💀",
-        "El verdadero tema serio del grupo 🍕"
-    ],
+"tinder": [
+    "🚨 Trauma detectado.",
+    "😭 Aquí intentamos recuperarnos de eso.",
+    "💀 Palabra prohibida en territorio seguro.",
+    "🫠 No invoques ese mal.",
+    "⚠️ Recuerdo de Vietnam desbloqueado."
+],
 
-    "alguien": [
-        "No sé, ¿personas? 😭",
-        "Hay 60 personas observando en silencio 👀",
-        "Probablemente sí, pero nadie quiere escribir primero 💀"
-    ],
+"me aburr": [
+    "🎭 El entretenimiento eres tú.",
+    "📢 Pues genera contenido.",
+    "👀 NPC detectado esperando evento aleatorio.",
+    "🍿 Empieza un drama, una encuesta o un debate.",
+    "😎 El grupo no incluye animadores profesionales.",
+    "🎲 Lanza un tema random y observa qué pasa.",
+    "🚨 Nivel de aburrimiento crítico detectado.",
+    "🤝 Interactúa con otros humanos. Riesgo asumible."
+],
 
-    "xd": [
-        "2009 vibes detectadas 😭",
-        "Ese xd viene con historia 💀"
-    ],
+"toy aburr": [
+    "🎭 El entretenimiento eres tú.",
+    "👀 NPC detectado esperando contenido.",
+    "📢 Pues anima el cotarro.",
+    "🍿 Estamos esperando tu aportación."
+],
 
-    "toy aburr": [
-        "Pues anima el cotarro 😭",
-        "NPC detectado esperando contenido 👀"
-    ],
+"grupo muerto": [
+    "⚰️ No está muerto. Está cargando.",
+    "😴 Está en modo ahorro de energía.",
+    "👀 Hay más gente leyendo que hablando.",
+    "📡 Actividad vital mínima detectada.",
+    "🫠 Todos esperan que escriba otro.",
+    "☕ El grupo está tomando café mentalmente.",
+    "📱 60 personas mirando. 0 escribiendo.",
+    "💀 Grupo muerto desde 2019. Mismos síntomas."
+],
 
-    "que hacen": [
-        "Sobreviviendo 😭",
-        "Intentando mantener este grupo vivo 💀"
-    ],
+"tengo hambre": [
+    "🍕 El tema más serio del grupo.",
+    "🌮 Proceda a ingerir alimentos.",
+    "🍔 Tu cuerpo te está enviando una sugerencia.",
+    "🍟 Todos acabamos hablando de comida.",
+    "🌯 Ahora yo también tengo hambre.",
+    "🍕 Otra vez la pizza ganando.",
+    "🍜 ¿Y qué vas a pedir?"
+],
 
-    "ayuda": [
-        "No somos psicólogos pero hacemos lo que podemos 😭",
-        "Describe tu evento canónico 💀"
-    ],
+"alguien": [
+    "👀 Seguro que sí. Otra cosa es que responda.",
+    "📢 Hay gente. Lo prometo.",
+    "🫠 Todos están esperando que responda otro.",
+    "🤔 Estadísticamente debería haber alguien.",
+    "📡 Presencia humana probable.",
+    "👻 Hay actividad paranormal suficiente.",
+    "📱 60 personas observando desde las sombras."
+],
 
-    "triste": [
-        "Abrazo grupal virtual 😭",
-        "El lore del personaje continúa 💀"
-    ],
+"xd": [
+    "📼 2009 vibes detectadas.",
+    "💀 Ese xd viene con historia.",
+    "🫠 Se nota la veteranía.",
+    "👴 Internet clásico desbloqueado."
+],
 
-    "banco": [
-        "Tema delicado en España últimamente 😭"
-    ],
+"que hacen": [
+    "😎 Sobreviviendo.",
+    "☕ Posponiendo cosas importantes.",
+    "📱 Mirando Telegram mientras hacen otra cosa.",
+    "🎭 Improvisando la vida.",
+    "👀 Observando sin participar.",
+    "🫠 Intentando parecer adultos funcionales.",
+    "🍿 Esperando contenido interesante."
+],
 
-    "pedo": [
-        "Telegram nunca decepciona 💀"
-    ],
+"ayuda": [
+    "🆘 Describe tu evento canónico.",
+    "😭 No somos psicólogos pero hacemos lo que podemos.",
+    "🤔 Cuéntanos el desastre.",
+    "📢 Necesitamos contexto."
+],
 
-    "mimir": [
-        "Hora de cerrar los ojos y recordar momentos vergonzosos 😭"
-    ],
+"triste": [
+    "🫂 Abrazo grupal virtual.",
+    "💀 El lore del personaje continúa.",
+    "🌈 Mañana probablemente será menos raro.",
+    "🤝 Te mandamos energía de la buena."
+],
 
-    "hola buenas": [
-        "Educación detectada 👀",
-        "Bienvenido al caos organizado 😭"
-    ],
-}
+"banco": [
+    "🏦 Tema delicado en España últimamente.",
+    "💸 Nunca trae buenas noticias.",
+    "😭 Ya estoy nervioso."
+],
+
+"pedo": [
+    "💀 Telegram nunca decepciona.",
+    "🫠 Era cuestión de tiempo.",
+    "📢 Se abrió la caja de Pandora."
+],
+
+"mimir": [
+    "😴 Hora de cerrar los ojos.",
+    "🌙 Que descanses.",
+    "💀 Hora de recordar momentos vergonzosos.",
+    "🛌 Buena suerte negociando con tu cerebro."
+],
+
+"lunes": [
+    "☕ Mis condolencias.",
+    "😭 Nadie pidió esto.",
+    "💀 El boss final de la semana.",
+    "🫠 Mucha fuerza."
+],
+
+"viernes": [
+    "🎉 Se logró.",
+    "🍻 Sobrevivimos otra semana.",
+    "😎 Ahora sí empieza la vida.",
+    "🚀 Modo fin de semana activado."
+],
+
+"curro": [
+    "💼 Palabra fea.",
+    "☕ Mucha fuerza.",
+    "😭 Que sea leve.",
+    "📊 Simulando productividad."
+],
+
+"trabajo": [
+    "💼 Tema sensible.",
+    "☕ Mucha fuerza.",
+    "😭 Nadie quiere hablar de eso.",
+    "📊 Estamos todos igual."
+],
+
+"pizza": [
+    "🍕 Por fin un tema importante.",
+    "😎 La respuesta suele ser pizza.",
+    "🍕 Nunca decepciona.",
+    "🤝 Une más que la política."
+],
+
+"cafe": [
+    "☕ Combustible oficial del grupo.",
+    "😎 Café y a seguir.",
+    "☕ La verdadera bebida energética.",
+    "💀 Sin café no hay conversación."
+],
+
+"ex": [
+    "🚨 Peligro detectado.",
+    "💀 No abras esa puerta.",
+    "🫠 Lore desbloqueado.",
+    "😭 Ya empezamos."
+],
+
+"telegram": [
+    "📱 Hogar de los NPCs observadores.",
+    "👀 Aquí seguimos.",
+    "😎 La red social de los supervivientes.",
+    "💀 Más adictivo de lo que parece."
+]
 
 preguntas_random = [
       "Pregunta seria: ¿qué red flag os hace salir corriendo? 😭",
