@@ -179,6 +179,33 @@ preguntas_random = [
     "¿Qué tema jamás debería tocarse después de las 2am? 💀",
     "¿Qué persona famosa tendría más probabilidades de acabar en este grupo? 👀"
 ]
+quienesmas_activo = {}
+quienesmas_votos = {}
+quienesmas_resultados = []
+
+preguntas_quienesmas = [
+    "¿Quién es más probable que defienda la pizza con piña?",
+    "¿Quién es más probable que llegue tarde y diga que ya está llegando?",
+    "¿Quién es más probable que se quede dormido en una cita?",
+    "¿Quién es más probable que llore con Titanic?",
+    "¿Quién es más probable que diga 'una copa y nos vamos' y vuelva de día?",
+    "¿Quién es más probable que tenga 50 chats sin responder?",
+    "¿Quién es más probable que sobreviva a un apocalipsis zombie?",
+    "¿Quién es más probable que se enamore de una voz?",
+    "¿Quién es más probable que se pierda usando Google Maps?",
+    "¿Quién es más probable que pida postre diciendo que no tiene hambre?",
+    "¿Quién es más probable que cante en la ducha como si estuviera en La Voz?",
+    "¿Quién es más probable que compre algo absurdo por internet?",
+    "¿Quién es más probable que se haga viral sin querer?",
+    "¿Quién es más probable que diga 'yo no me enamoro' y caiga primero?",
+    "¿Quién es más probable que tenga una historia surrealista para todo?",
+    "¿Quién es más probable que organice un viaje entero?",
+    "¿Quién es más probable que pierda el cargador del móvil?",
+    "¿Quién es más probable que vea una temporada entera en un día?",
+    "¿Quién es más probable que mande un audio de 7 minutos?",
+    "¿Quién es más probable que convierta cualquier plan tranquilo en una aventura?"
+]
+
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje = update.message.text.lower().strip()
 
@@ -570,7 +597,87 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(texto)
 
         return
-    
+
+        if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
+        pregunta = random.choice(preguntas_quienesmas)
+
+        quienesmas_activo[chat_id] = pregunta
+        quienesmas_votos[chat_id] = {}
+
+        await update.message.reply_text(
+            f"👀 ¿Quién es más probable...?\n\n"
+            f"{pregunta}\n\n"
+            f"🗳️ Para votar, escribe el @usuario de la persona elegida.\n"
+            f"Ejemplo: @usuario\n\n"
+            f"Solo cuentan los mensajes que tengan arroba.\n"
+            f"Para cerrar la votación, un admin puede poner /cerrarquienes."
+        )
+        return
+
+    if mensaje.startswith("!cerrarquienes") or mensaje.startswith("/cerrarquienes"):
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        if update.effective_user.id not in admin_ids:
+            await update.message.reply_text("Solo los admins pueden cerrar la votación 😭")
+            return
+
+        if chat_id not in quienesmas_activo:
+            await update.message.reply_text("No hay ninguna votación activa ahora mismo.")
+            return
+
+        votos = quienesmas_votos.get(chat_id, {})
+
+        if not votos:
+            await update.message.reply_text("Nadie ha votado. Democracia fallida 😭")
+            quienesmas_activo.pop(chat_id, None)
+            quienesmas_votos.pop(chat_id, None)
+            return
+
+        conteo = {}
+
+        for votado in votos.values():
+            conteo[votado] = conteo.get(votado, 0) + 1
+
+        ranking = sorted(conteo.items(), key=lambda x: x[1], reverse=True)
+
+        texto = "🏆 Resultado del '¿Quién es más...?'\n\n"
+
+        for i, (nombre, total) in enumerate(ranking, start=1):
+            texto += f"{i}. {nombre} — {total} voto(s)\n"
+
+        ganador = ranking[0][0]
+
+        texto += f"\n{ganador}, el grupo ha hablado. Proceda a defenderse 😭"
+
+        quienesmas_resultados.append({
+            "pregunta": quienesmas_activo[chat_id],
+            "ganador": ganador,
+            "votos": conteo
+        })
+
+        quienesmas_activo.pop(chat_id, None)
+        quienesmas_votos.pop(chat_id, None)
+
+        await update.message.reply_text(texto)
+        return
+
+    if chat_id in quienesmas_activo and "@" in update.message.text:
+        texto_voto = update.message.text.strip()
+        votante_id = update.effective_user.id
+
+        partes = texto_voto.split()
+        menciones = [p for p in partes if p.startswith("@")]
+
+        if not menciones:
+            return
+
+        voto = menciones[0]
+
+        quienesmas_votos[chat_id][votante_id] = voto
+
+        await update.message.reply_text(f"🗳️ Voto registrado: {voto}")
+        return
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
