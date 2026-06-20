@@ -13,7 +13,6 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 print("API:", os.getenv("OPENAI_API_KEY"))
 respuestas = {
 
-```
 "buenos dias": [
     "☕ Buenos días. Ya podéis empezar a fingir que sois adultos funcionales.",
     "🌞 Buenos días, habitantes del caos.",
@@ -230,7 +229,7 @@ respuestas = {
     "😎 La red social de los supervivientes.",
     "💀 Más adictivo de lo que parece."
 ]
-```
+
 
 }
 
