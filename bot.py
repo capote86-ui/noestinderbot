@@ -854,6 +854,8 @@ mensajes_silencio = [
 ]
 MINUTOS_SILENCIO = 180
 historial_chats = defaultdict(lambda: deque(maxlen=120))
+
+RAQUEL_ID = 1176046170
 contador_mensajes = {}
 ultimo_mensaje_usuario = {}
 nombres_usuarios = {}
