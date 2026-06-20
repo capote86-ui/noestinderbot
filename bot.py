@@ -598,7 +598,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         return
 
-        if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
+    if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
         pregunta = random.choice(preguntas_quienesmas)
 
         quienesmas_activo[chat_id] = pregunta
