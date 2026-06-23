@@ -8,8 +8,8 @@ from collections import defaultdict, deque, Counter
 from openai import OpenAI
 import os
 
-TOKEN = "8996485412:AAF_SJkLwA3-3xtMUGj59TUJNGcF17J9LV0"
-print("API:", os.getenv("OPENAI_API_KEY"))
+TOKEN = os.getenv("BOT_TOKEN")
+print("TOKEN CARGADO:", bool(TOKEN))
 print("API:", os.getenv("OPENAI_API_KEY"))
 respuestas = {
 
