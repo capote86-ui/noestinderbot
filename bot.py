@@ -8,7 +8,7 @@ from collections import defaultdict, deque, Counter
 from openai import OpenAI
 import os
 
-TOKEN = "8996485412:AAF_SJkLwA3-3xtMUGj59TUJNGcF17J9LV0"
+TOKEN = os.getenv("TOKEN")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 print("API:", os.getenv("OPENAI_API_KEY"))
 respuestas = {
@@ -817,7 +817,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         return
 
-        if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
+    if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
 
         if update.effective_user.id != RAQUEL_ID:
             await update.message.reply_text(
@@ -839,7 +839,6 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🛑 Para cerrar la votación utiliza /cerrarquienes"
         )
         return
-
     if mensaje.startswith("!cerrarquienes") or mensaje.startswith("/cerrarquienes"):
 
         if update.effective_user.id != RAQUEL_ID:
