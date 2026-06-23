@@ -817,35 +817,35 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         return
 
-    if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
+        if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
 
-        if update.effective_user.id != 1176046170:
+        if update.effective_user.id != RAQUEL_ID:
             await update.message.reply_text(
-            "🚫 Solo Raquel puede iniciar un '¿Quién es más...?'."
+                "🚫 Solo Raquel puede iniciar un '¿Quién es más...?'."
+            )
+            return
+
+        pregunta = random.choice(preguntas_quienesmas)
+
+        quienesmas_activo[chat_id] = pregunta
+        quienesmas_votos[chat_id] = {}
+
+        await update.message.reply_text(
+            f"👀 ¿Quién es más probable...?\n\n"
+            f"{pregunta}\n\n"
+            f"🗳️ Para votar, escribe únicamente el @usuario de la persona elegida.\n"
+            f"Ejemplo: @usuario\n\n"
+            f"✅ Solo cuentan mensajes que sean exactamente un @usuario.\n"
+            f"🛑 Para cerrar la votación utiliza /cerrarquienes"
         )
         return
 
-    pregunta = random.choice(preguntas_quienesmas)
-
-    quienesmas_activo[chat_id] = pregunta
-    quienesmas_votos[chat_id] = {}
-
-    await update.message.reply_text(
-        f"👀 ¿Quién es más probable...?\n\n"
-        f"{pregunta}\n\n"
-        f"🗳️ Para votar, escribe únicamente el @usuario de la persona elegida.\n"
-        f"Ejemplo: @usuario\n\n"
-        f"✅ Solo cuentan los mensajes que contengan un @usuario.\n"
-        f"🛑 Para cerrar la votación utiliza /cerrarquienes"
-    )
-    return
-
     if mensaje.startswith("!cerrarquienes") or mensaje.startswith("/cerrarquienes"):
-        admins = await context.bot.get_chat_administrators(chat_id)
-        admin_ids = [admin.user.id for admin in admins]
 
-        if update.effective_user.id not in admin_ids:
-            await update.message.reply_text("Solo los admins pueden cerrar la votación 😭")
+        if update.effective_user.id != RAQUEL_ID:
+            await update.message.reply_text(
+                "🚫 Solo Raquel puede cerrar esta votación."
+            )
             return
 
         if chat_id not in quienesmas_activo:
@@ -873,7 +873,6 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             texto += f"{i}. {nombre} — {total} voto(s)\n"
 
         ganador = ranking[0][0]
-
         texto += f"\n{ganador}, el grupo ha hablado. Proceda a defenderse 😭"
 
         quienesmas_resultados.append({
@@ -888,28 +887,25 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(texto)
         return
 
-    if chat_id in quienesmas_activo and "@" in update.message.text:
+    if chat_id in quienesmas_activo:
         texto_voto = update.message.text.strip()
         votante_id = update.effective_user.id
 
-        partes = texto_voto.split()
-        menciones = [p for p in partes if p.startswith("@")]
-
-        if not menciones:
+        if not texto_voto.startswith("@"):
             return
 
-        voto = menciones[0]
+        if " " in texto_voto:
+            return
 
-        quienesmas_votos[chat_id][votante_id] = voto
+        quienesmas_votos[chat_id][votante_id] = texto_voto
 
-        await update.message.reply_text(f"🗳️ Voto registrado: {voto}")
         return
 
     if mensaje.startswith("!miid") or mensaje.startswith("/miid"):
         await update.message.reply_text(
-        f"Tu ID numérico de Telegram es: {update.effective_user.id}"
-    )
-    return
+            f"Tu ID numérico de Telegram es: {update.effective_user.id}"
+        )
+        return
     for trigger in respuestas:
         if trigger in mensaje:
             respuesta = random.choice(respuestas[trigger])
