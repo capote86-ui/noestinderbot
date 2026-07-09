@@ -888,26 +888,26 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if mensaje.startswith("!miid") or mensaje.startswith("/miid"):
-        await update.message.reply_text(
-            f"Tu ID numérico de Telegram es: {update.effective_user.id}"
-        )
-        return
+    await update.message.reply_text(
+        f"Tu ID numérico de Telegram es: {update.effective_user.id}"
+    )
+    return
 
-        if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
-        admins = await context.bot.get_chat_administrators(chat_id)
-        admin_ids = [admin.user.id for admin in admins]
-        await iniciar_trivial(update, context, chat_id, admin_ids)
-        return
+if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
+    admins = await context.bot.get_chat_administrators(chat_id)
+    admin_ids = [admin.user.id for admin in admins]
+    await iniciar_trivial(update, context, chat_id, admin_ids)
+    return
 
-    if mensaje.startswith("!cancelartrivial") or mensaje.startswith("/cancelartrivial"):
-        admins = await context.bot.get_chat_administrators(chat_id)
-        admin_ids = [admin.user.id for admin in admins]
-        await cancelar_trivial(update, chat_id, admin_ids)
-        return
+if mensaje.startswith("!cancelartrivial") or mensaje.startswith("/cancelartrivial"):
+    admins = await context.bot.get_chat_administrators(chat_id)
+    admin_ids = [admin.user.id for admin in admins]
+    await cancelar_trivial(update, chat_id, admin_ids)
+    return
 
-    if mensaje.startswith("!rankingtrivial") or mensaje.startswith("/rankingtrivial"):
-        await mostrar_ranking_trivial(update)
-        return
+if mensaje.startswith("!rankingtrivial") or mensaje.startswith("/rankingtrivial"):
+    await mostrar_ranking_trivial(update)
+    return
         
     for trigger in respuestas:
         if trigger in mensaje:
