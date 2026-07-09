@@ -1168,8 +1168,8 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
 
-        if update.effective_user.id != RAQUEL_ID:
-            await update.message.reply_text(
+    if update.effective_user.id != RAQUEL_ID:
+        await update.message.reply_text(
                 "🚫 Solo Raquel puede iniciar un trivial."
             )
             return
