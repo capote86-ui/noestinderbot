@@ -631,6 +631,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Nada de insultos, faltas de respeto, acoso ni comportamientos que generen mal ambiente.\n\n"
 
             "4️⃣ Prohibido:\n"
+            "• Decir BRO y derivados.\n"
             "• Menores de 18 años.\n"
             "• Spam y publicidad.\n"
             "• Venta o promoción de contenido sexual o pornográfico.\n"
@@ -644,6 +645,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "7️⃣ Aquí venimos a charlar, reírnos y mantener un buen ambiente.\n\n"
 
             "8️⃣ El incumplimiento de las normas puede suponer la expulsión inmediata."
+            
         )
 
         await update.message.reply_text(texto_normas)
