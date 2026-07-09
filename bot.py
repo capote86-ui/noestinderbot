@@ -52,14 +52,6 @@ respuestas = {
     "🌌 El caos seguirá aquí al despertar."
 ],
 
-"hola": [
-    "👋 Educación detectada.",
-    "😎 Bienvenido al caos organizado.",
-    "📢 Presencia humana confirmada.",
-    "👀 Hola. Ya puedes empezar a cotillear.",
-    "🤝 Saludos, ciudadano."
-],
-
 "hola buenas": [
     "👋 Educación premium detectada.",
     "😎 Bienvenido al caos organizado.",
@@ -122,13 +114,6 @@ respuestas = {
     "📡 Presencia humana probable.",
     "👻 Hay actividad paranormal suficiente.",
     "📱 60 personas observando desde las sombras."
-],
-
-"xd": [
-    "📼 2009 vibes detectadas.",
-    "💀 Ese xd viene con historia.",
-    "🫠 Se nota la veteranía.",
-    "👴 Internet clásico desbloqueado."
 ],
 
 "que hacen": [
