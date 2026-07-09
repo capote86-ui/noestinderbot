@@ -895,7 +895,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-        if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
+    if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
         await iniciar_trivial(update, context, chat_id, admin_ids)
