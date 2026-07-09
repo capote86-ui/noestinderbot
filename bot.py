@@ -887,7 +887,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         return
 
-    if mensaje.startswith("!miid") or mensaje.startswith("/miid"):
+if mensaje.startswith("!miid") or mensaje.startswith("/miid"):
     await update.message.reply_text(
         f"Tu ID numérico de Telegram es: {update.effective_user.id}"
     )
