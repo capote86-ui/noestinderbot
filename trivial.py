@@ -7,6 +7,12 @@ trivials_activos = {}
 ranking_trivial = {}
 
 
+def nombre_usuario(user):
+    if user.username:
+        return f"@{user.username}"
+    return user.first_name or "Alguien"
+
+
 async def iniciar_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE, chat_id: int, admin_ids: list):
     if update.effective_user.id not in admin_ids:
         await update.message.reply_text("🚫 Solo los administradores pueden iniciar un trivial.")
@@ -16,10 +22,7 @@ async def iniciar_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE, ch
         await update.message.reply_text("Ya hay un trivial activo en este grupo.")
         return
 
-    preguntas_partida = random.sample(
-        preguntas_trivial,
-        min(15, len(preguntas_trivial))
-    )
+    preguntas_partida = random.sample(preguntas_trivial, min(15, len(preguntas_trivial)))
 
     trivials_activos[chat_id] = {
         "indice": 0,
@@ -27,7 +30,9 @@ async def iniciar_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE, ch
         "jugadores": {},
         "puntos": {},
         "respuestas": {},
-        "mensaje_id": None
+        "mensaje_id": None,
+        "estado": "inscripcion",
+        "ronda": 0
     }
 
     teclado = InlineKeyboardMarkup([[
@@ -35,17 +40,54 @@ async def iniciar_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE, ch
         InlineKeyboardButton("▶️ Empezar", callback_data=f"trivia_start:{chat_id}")
     ]])
 
-    await update.message.reply_text(
+    mensaje = await update.message.reply_text(
         "🧠 TRIVIAL NO ES TINDER\n\n"
         "Partida de 15 preguntas random.\n\n"
-        "Pulsa ✅ Participar para apuntarte.\n"
-        "Cuando estéis listos, un admin pulsa ▶️ Empezar.",
+        "✅ Pulsa Participar para apuntarte.\n"
+        "▶️ Cuando estéis listos, un admin pulsa Empezar.\n\n"
+        "Participantes: nadie todavía.",
+        reply_markup=teclado
+    )
+
+    trivials_activos[chat_id]["mensaje_id"] = mensaje.message_id
+
+
+async def actualizar_mensaje_inscripcion(context, chat_id):
+    partida = trivials_activos.get(chat_id)
+    if not partida:
+        return
+
+    jugadores = partida["jugadores"]
+
+    if jugadores:
+        lista = "\n".join([f"• {nombre}" for nombre in jugadores.values()])
+    else:
+        lista = "nadie todavía."
+
+    teclado = InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Participar", callback_data=f"trivia_join:{chat_id}"),
+        InlineKeyboardButton("▶️ Empezar", callback_data=f"trivia_start:{chat_id}")
+    ]])
+
+    await context.bot.edit_message_text(
+        chat_id=chat_id,
+        message_id=partida["mensaje_id"],
+        text=(
+            "🧠 TRIVIAL NO ES TINDER\n\n"
+            "Partida de 15 preguntas random.\n\n"
+            "✅ Pulsa Participar para apuntarte.\n"
+            "▶️ Cuando estéis listos, un admin pulsa Empezar.\n\n"
+            f"Participantes:\n{lista}"
+        ),
         reply_markup=teclado
     )
 
 
 async def enviar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: int):
-    partida = trivials_activos[chat_id]
+    partida = trivials_activos.get(chat_id)
+    if not partida:
+        return
+
     indice = partida["indice"]
 
     if indice >= len(partida["preguntas"]):
@@ -54,10 +96,14 @@ async def enviar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: i
 
     pregunta = partida["preguntas"][indice]
     partida["respuestas"] = {}
+    partida["estado"] = "pregunta"
+    partida["ronda"] += 1
+    ronda_actual = partida["ronda"]
 
     texto = (
         f"🧠 TRIVIAL NO ES TINDER\n\n"
-        f"Pregunta {indice + 1}/15\n\n"
+        f"Pregunta {indice + 1}/15\n"
+        f"⏱️ Tenéis 20 segundos para responder.\n\n"
         f"{pregunta['pregunta']}\n\n"
         f"A) {pregunta['opciones'][0]}\n"
         f"B) {pregunta['opciones'][1]}\n"
@@ -66,10 +112,10 @@ async def enviar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: i
     )
 
     teclado = InlineKeyboardMarkup([[
-        InlineKeyboardButton("A", callback_data=f"trivia_respuesta:A:{chat_id}"),
-        InlineKeyboardButton("B", callback_data=f"trivia_respuesta:B:{chat_id}"),
-        InlineKeyboardButton("C", callback_data=f"trivia_respuesta:C:{chat_id}"),
-        InlineKeyboardButton("D", callback_data=f"trivia_respuesta:D:{chat_id}")
+        InlineKeyboardButton("A", callback_data=f"trivia_respuesta:A:{chat_id}:{ronda_actual}"),
+        InlineKeyboardButton("B", callback_data=f"trivia_respuesta:B:{chat_id}:{ronda_actual}"),
+        InlineKeyboardButton("C", callback_data=f"trivia_respuesta:C:{chat_id}:{ronda_actual}"),
+        InlineKeyboardButton("D", callback_data=f"trivia_respuesta:D:{chat_id}:{ronda_actual}")
     ]])
 
     mensaje = await context.bot.send_message(
@@ -80,9 +126,38 @@ async def enviar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: i
 
     partida["mensaje_id"] = mensaje.message_id
 
+    context.job_queue.run_once(
+        cerrar_pregunta_por_tiempo,
+        when=20,
+        data={"chat_id": chat_id, "ronda": ronda_actual},
+        name=f"trivial_{chat_id}_{ronda_actual}"
+    )
+
+
+async def cerrar_pregunta_por_tiempo(context: ContextTypes.DEFAULT_TYPE):
+    chat_id = context.job.data["chat_id"]
+    ronda = context.job.data["ronda"]
+
+    partida = trivials_activos.get(chat_id)
+    if not partida:
+        return
+
+    if partida.get("ronda") != ronda:
+        return
+
+    if partida.get("estado") != "pregunta":
+        return
+
+    await cerrar_pregunta_trivial(context, chat_id)
+
 
 async def cerrar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: int):
-    partida = trivials_activos[chat_id]
+    partida = trivials_activos.get(chat_id)
+    if not partida:
+        return
+
+    partida["estado"] = "cerrando"
+
     indice = partida["indice"]
     pregunta = partida["preguntas"][indice]
     correcta = pregunta["correcta"]
@@ -129,7 +204,9 @@ async def cerrar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: i
 
 
 async def finalizar_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: int):
-    partida = trivials_activos[chat_id]
+    partida = trivials_activos.get(chat_id)
+    if not partida:
+        return
 
     texto = "🏁 FINAL DEL TRIVIAL\n\n"
 
@@ -180,8 +257,6 @@ async def mostrar_ranking_trivial(update: Update):
 
 async def botones_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()
-
     datos = query.data.split(":")
     accion = datos[0]
 
@@ -192,13 +267,20 @@ async def botones_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.answer("No hay trivial activo.", show_alert=True)
             return
 
+        partida = trivials_activos[chat_id]
+
+        if partida["estado"] != "inscripcion":
+            await query.answer("La partida ya empezó.", show_alert=True)
+            return
+
         user_id = query.from_user.id
-        nombre = query.from_user.first_name or "Alguien"
+        nombre = nombre_usuario(query.from_user)
 
-        trivials_activos[chat_id]["jugadores"][user_id] = nombre
-        trivials_activos[chat_id]["puntos"][user_id] = 0
+        partida["jugadores"][user_id] = nombre
+        partida["puntos"][user_id] = 0
 
-        await query.answer("Te has apuntado al trivial 🧠")
+        await query.answer("Te has apuntado al trivial 🧠", show_alert=True)
+        await actualizar_mensaje_inscripcion(context, chat_id)
         return
 
     if accion == "trivia_start":
@@ -219,6 +301,7 @@ async def botones_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.answer("Aún no se ha apuntado nadie.", show_alert=True)
             return
 
+        await query.answer("Empieza el trivial 🧠", show_alert=True)
         await query.message.edit_text("🧠 Empieza el trivial. Que gane el menos NPC.")
         await enviar_pregunta_trivial(context, chat_id)
         return
@@ -226,12 +309,22 @@ async def botones_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if accion == "trivia_respuesta":
         respuesta = datos[1]
         chat_id = int(datos[2])
+        ronda = int(datos[3])
 
         if chat_id not in trivials_activos:
             await query.answer("Esta partida ya terminó.", show_alert=True)
             return
 
         partida = trivials_activos[chat_id]
+
+        if partida.get("ronda") != ronda:
+            await query.answer("Esta pregunta ya no está activa.", show_alert=True)
+            return
+
+        if partida.get("estado") != "pregunta":
+            await query.answer("Esta pregunta ya está cerrada.", show_alert=True)
+            return
+
         user_id = query.from_user.id
 
         if user_id not in partida["jugadores"]:
@@ -244,7 +337,7 @@ async def botones_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         partida["respuestas"][user_id] = respuesta
 
-        await query.answer(f"Has elegido {respuesta}")
+        await query.answer(f"Respuesta registrada: {respuesta}", show_alert=True)
 
         if len(partida["respuestas"]) >= len(partida["jugadores"]):
             await cerrar_pregunta_trivial(context, chat_id)
