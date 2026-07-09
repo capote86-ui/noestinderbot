@@ -1,4 +1,4 @@
-from telegram.ext import Application, MessageHandler, filters
+from telegram.ext import Application, MessageHandler, CallbackQueryHandler, filters
 from telegram import Update
 from telegram.ext import ContextTypes
 import random
@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 from collections import defaultdict, deque, Counter
 from openai import OpenAI
 import os
+
+from trivial import iniciar_trivial, cancelar_trivial, mostrar_ranking_trivial, botones_trivial
 
 TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN CARGADO:", bool(TOKEN))
@@ -890,6 +892,22 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"Tu ID numérico de Telegram es: {update.effective_user.id}"
         )
         return
+
+        if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+        await iniciar_trivial(update, context, chat_id, admin_ids)
+        return
+
+    if mensaje.startswith("!cancelartrivial") or mensaje.startswith("/cancelartrivial"):
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+        await cancelar_trivial(update, chat_id, admin_ids)
+        return
+
+    if mensaje.startswith("!rankingtrivial") or mensaje.startswith("/rankingtrivial"):
+        await mostrar_ranking_trivial(update)
+        return
         
     for trigger in respuestas:
         if trigger in mensaje:
@@ -1084,6 +1102,7 @@ async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.TEXT, responder))
+app.add_handler(CallbackQueryHandler(botones_trivial))
 
 print("Bot funcionando 😭")
 app.job_queue.run_repeating(revisar_silencios, interval=600, first=600)
