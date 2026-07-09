@@ -1,37 +1,10 @@
 import random
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
+from preguntas_trivial import preguntas_trivial
 
 trivials_activos = {}
 ranking_trivial = {}
-
-preguntas_trivial = [
-    {
-        "pregunta": "¿Cuál es la capital de Australia?",
-        "opciones": ["Sídney", "Melbourne", "Canberra", "Perth"],
-        "correcta": "C"
-    },
-    {
-        "pregunta": "¿Qué planeta es conocido como el planeta rojo?",
-        "opciones": ["Venus", "Marte", "Júpiter", "Saturno"],
-        "correcta": "B"
-    },
-    {
-        "pregunta": "¿Quién pintó La Gioconda?",
-        "opciones": ["Picasso", "Van Gogh", "Leonardo da Vinci", "Dalí"],
-        "correcta": "C"
-    },
-    {
-        "pregunta": "¿Cuántos lados tiene un hexágono?",
-        "opciones": ["5", "6", "7", "8"],
-        "correcta": "B"
-    },
-    {
-        "pregunta": "¿En qué país está la Torre Eiffel?",
-        "opciones": ["Italia", "Francia", "Alemania", "Bélgica"],
-        "correcta": "B"
-    }
-]
 
 
 async def iniciar_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE, chat_id: int, admin_ids: list):
@@ -137,9 +110,12 @@ async def cerrar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: i
 
     ranking = sorted(partida["puntos"].items(), key=lambda x: x[1], reverse=True)
 
-    for user_id, puntos in ranking:
-        nombre = partida["jugadores"].get(user_id, "Alguien")
-        texto += f"• {nombre}: {puntos} punto(s)\n"
+    if ranking:
+        for user_id, puntos in ranking:
+            nombre = partida["jugadores"].get(user_id, "Alguien")
+            texto += f"• {nombre}: {puntos} punto(s)\n"
+    else:
+        texto += "• Nadie ha puntuado todavía.\n"
 
     await context.bot.edit_message_text(
         chat_id=chat_id,
