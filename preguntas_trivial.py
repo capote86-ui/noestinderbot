@@ -880,5 +880,400 @@ preguntas_trivial = [
         "correcta": "Jurassic Park",
         "explicacion": "Jurassic Park presenta un parque temático con dinosaurios creados mediante ingeniería genética."
     }
+    ```python
+    {
+        "categoria": "Geografía",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es la capital de Brasil?",
+        "opciones": ["Río de Janeiro", "São Paulo", "Brasilia", "Salvador"],
+        "correcta": "Brasilia",
+        "explicacion": "Brasilia sustituyó a Río de Janeiro como capital de Brasil en 1960."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 1,
+        "pregunta": "¿Qué órgano del cuerpo humano se encarga principalmente de filtrar la sangre?",
+        "opciones": ["Riñones", "Estómago", "Pulmones", "Páncreas"],
+        "correcta": "Riñones",
+        "explicacion": "Los riñones filtran la sangre y producen la orina para eliminar residuos."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿Qué ciudad italiana fue el centro del Imperio romano?",
+        "opciones": ["Venecia", "Roma", "Florencia", "Milán"],
+        "correcta": "Roma",
+        "explicacion": "Roma fue la capital y el principal centro político del Imperio romano."
+    },
+    {
+        "categoria": "Cine",
+        "dificultad": 1,
+        "pregunta": "¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?",
+        "opciones": ["Chris Evans", "Robert Downey Jr.", "Chris Hemsworth", "Mark Ruffalo"],
+        "correcta": "Robert Downey Jr.",
+        "explicacion": "Robert Downey Jr. interpretó a Tony Stark desde Iron Man, estrenada en 2008."
+    },
+    {
+        "categoria": "Animales",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es el único mamífero cubierto de escamas?",
+        "opciones": ["Armadillo", "Pangolín", "Erizo", "Ornitorrinco"],
+        "correcta": "Pangolín",
+        "explicacion": "El pangolín es el único mamífero conocido cuyo cuerpo está cubierto de grandes escamas."
+    },
+    {
+        "categoria": "Música",
+        "dificultad": 1,
+        "pregunta": "¿Qué cantante interpreta la canción Shape of You?",
+        "opciones": ["Ed Sheeran", "Bruno Mars", "Justin Bieber", "Sam Smith"],
+        "correcta": "Ed Sheeran",
+        "explicacion": "Shape of You fue publicada por Ed Sheeran en 2017."
+    },
+    {
+        "categoria": "Deportes",
+        "dificultad": 1,
+        "pregunta": "¿Cuánto dura reglamentariamente un partido de fútbol sin contar descansos ni prórroga?",
+        "opciones": ["80 minutos", "90 minutos", "100 minutos", "120 minutos"],
+        "correcta": "90 minutos",
+        "explicacion": "Un partido de fútbol se divide en dos tiempos de 45 minutos."
+    },
+    {
+        "categoria": "Tecnología",
+        "dificultad": 2,
+        "pregunta": "¿Qué empresa desarrolló originalmente el sistema operativo Android?",
+        "opciones": ["Microsoft", "Android Inc.", "Apple", "Nokia"],
+        "correcta": "Android Inc.",
+        "explicacion": "Android fue creado por Android Inc., empresa que Google adquirió en 2005."
+    },
+    {
+        "categoria": "Gastronomía",
+        "dificultad": 1,
+        "pregunta": "¿Qué ingrediente da su color característico a una paella tradicional valenciana?",
+        "opciones": ["Pimentón", "Azafrán", "Canela", "Cúrcuma"],
+        "correcta": "Azafrán",
+        "explicacion": "El azafrán aporta color, aroma y sabor característicos al arroz."
+    },
+    {
+        "categoria": "Literatura",
+        "dificultad": 2,
+        "pregunta": "¿Quién escribió La metamorfosis?",
+        "opciones": ["Franz Kafka", "Hermann Hesse", "George Orwell", "Fiódor Dostoyevski"],
+        "correcta": "Franz Kafka",
+        "explicacion": "La metamorfosis fue escrita por Franz Kafka y publicada en 1915."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 2,
+        "pregunta": "¿Qué país tiene a Sucre como capital constitucional?",
+        "opciones": ["Bolivia", "Paraguay", "Ecuador", "Perú"],
+        "correcta": "Bolivia",
+        "explicacion": "Sucre es la capital constitucional de Bolivia, mientras que La Paz alberga la sede del Gobierno."
+    },
+    {
+        "categoria": "Espacio",
+        "dificultad": 2,
+        "pregunta": "¿Qué planeta tarda más tiempo en completar una vuelta alrededor del Sol?",
+        "opciones": ["Urano", "Saturno", "Neptuno", "Júpiter"],
+        "correcta": "Neptuno",
+        "explicacion": "Neptuno tarda aproximadamente 165 años terrestres en completar su órbita."
+    },
+    {
+        "categoria": "Series",
+        "dificultad": 1,
+        "pregunta": "¿Cómo se llama la familia protagonista de Los Simpson?",
+        "opciones": ["Los Griffin", "Los Simpson", "Los Smith", "Los Bundy"],
+        "correcta": "Los Simpson",
+        "explicacion": "La serie gira en torno a Homer, Marge, Bart, Lisa y Maggie Simpson."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Qué tipo de sangre es conocido como donante universal de glóbulos rojos?",
+        "opciones": ["A positivo", "AB positivo", "O negativo", "B negativo"],
+        "correcta": "O negativo",
+        "explicacion": "Los glóbulos rojos O negativo pueden utilizarse en emergencias para personas de cualquier grupo sanguíneo."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿Qué navegante portugués llegó a la India rodeando África en 1498?",
+        "opciones": ["Fernando de Magallanes", "Vasco da Gama", "Bartolomé Díaz", "Pedro Álvares Cabral"],
+        "correcta": "Vasco da Gama",
+        "explicacion": "Vasco da Gama abrió una ruta marítima directa entre Europa y la India."
+    },
+    {
+        "categoria": "Videojuegos",
+        "dificultad": 1,
+        "pregunta": "¿En qué videojuego aparecen criaturas llamadas creepers?",
+        "opciones": ["Fortnite", "Minecraft", "Roblox", "Terraria"],
+        "correcta": "Minecraft",
+        "explicacion": "Los creepers son enemigos explosivos característicos de Minecraft."
+    },
+    {
+        "categoria": "Cultura general",
+        "dificultad": 1,
+        "pregunta": "¿Cuántos segundos tiene un minuto?",
+        "opciones": ["30", "45", "60", "100"],
+        "correcta": "60",
+        "explicacion": "Un minuto se divide en 60 segundos."
+    },
+    {
+        "categoria": "Cine",
+        "dificultad": 2,
+        "pregunta": "¿Qué director creó las películas Pulp Fiction y Kill Bill?",
+        "opciones": ["Quentin Tarantino", "Martin Scorsese", "David Fincher", "Francis Ford Coppola"],
+        "correcta": "Quentin Tarantino",
+        "explicacion": "Quentin Tarantino escribió y dirigió tanto Pulp Fiction como las dos entregas de Kill Bill."
+    },
+    {
+        "categoria": "Animales",
+        "dificultad": 1,
+        "pregunta": "¿Qué animal es conocido por llevar a sus crías en una bolsa?",
+        "opciones": ["Koala", "Canguro", "Oso panda", "Llama"],
+        "correcta": "Canguro",
+        "explicacion": "Las crías de canguro continúan su desarrollo dentro del marsupio de la madre."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 2,
+        "pregunta": "¿Qué cordillera separa tradicionalmente Europa de Asia?",
+        "opciones": ["Alpes", "Andes", "Urales", "Himalaya"],
+        "correcta": "Urales",
+        "explicacion": "Los montes Urales forman parte de la frontera geográfica convencional entre Europa y Asia."
+    },
+    {
+        "categoria": "Música",
+        "dificultad": 2,
+        "pregunta": "¿De qué país era originaria la banda ABBA?",
+        "opciones": ["Noruega", "Suecia", "Dinamarca", "Finlandia"],
+        "correcta": "Suecia",
+        "explicacion": "ABBA se formó en Estocolmo y representó a Suecia en Eurovisión en 1974."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Cómo se llama el proceso mediante el cual las plantas producen alimento usando luz?",
+        "opciones": ["Respiración", "Fotosíntesis", "Fermentación", "Evaporación"],
+        "correcta": "Fotosíntesis",
+        "explicacion": "Durante la fotosíntesis, las plantas convierten luz, agua y dióxido de carbono en energía química."
+    },
+    {
+        "categoria": "Deportes",
+        "dificultad": 2,
+        "pregunta": "¿En qué deporte se utiliza el término birdie?",
+        "opciones": ["Golf", "Bádminton", "Béisbol", "Pádel"],
+        "correcta": "Golf",
+        "explicacion": "En golf, un birdie significa completar un hoyo con un golpe menos que el par."
+    },
+    {
+        "categoria": "Literatura",
+        "dificultad": 1,
+        "pregunta": "¿Qué personaje literario vive en el número 221B de Baker Street?",
+        "opciones": ["Drácula", "Sherlock Holmes", "Oliver Twist", "Dorian Gray"],
+        "correcta": "Sherlock Holmes",
+        "explicacion": "Sherlock Holmes y el doctor Watson viven en el 221B de Baker Street, en Londres."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 3,
+        "pregunta": "¿Qué tratado puso fin oficialmente a la Primera Guerra Mundial con Alemania?",
+        "opciones": ["Tratado de Utrecht", "Tratado de Versalles", "Tratado de París", "Tratado de Tordesillas"],
+        "correcta": "Tratado de Versalles",
+        "explicacion": "El Tratado de Versalles fue firmado en 1919 entre Alemania y las potencias aliadas."
+    },
+    {
+        "categoria": "Tecnología",
+        "dificultad": 1,
+        "pregunta": "¿Qué red social utiliza un icono con forma de nota musical?",
+        "opciones": ["Instagram", "TikTok", "Facebook", "Reddit"],
+        "correcta": "TikTok",
+        "explicacion": "El logotipo de TikTok representa una nota musical estilizada."
+    },
+    {
+        "categoria": "Gastronomía",
+        "dificultad": 2,
+        "pregunta": "¿Qué fruto seco se utiliza tradicionalmente para preparar mazapán?",
+        "opciones": ["Almendra", "Nuez", "Avellana", "Pistacho"],
+        "correcta": "Almendra",
+        "explicacion": "El mazapán se elabora principalmente con almendra molida y azúcar."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es la capital de República Dominicana?",
+        "opciones": ["Santo Domingo", "Punta Cana", "Santiago de los Caballeros", "La Romana"],
+        "correcta": "Santo Domingo",
+        "explicacion": "Santo Domingo es la capital y la ciudad más poblada de República Dominicana."
+    },
+    {
+        "categoria": "Espacio",
+        "dificultad": 3,
+        "pregunta": "¿Cómo se llama la frontera alrededor de un agujero negro de la que nada puede escapar?",
+        "opciones": ["Horizonte de sucesos", "Cinturón de asteroides", "Corona solar", "Magnetosfera"],
+        "correcta": "Horizonte de sucesos",
+        "explicacion": "El horizonte de sucesos marca el límite más allá del cual ni siquiera la luz puede escapar."
+    },
+    {
+        "categoria": "Cine",
+        "dificultad": 1,
+        "pregunta": "¿Qué animal es Dumbo en la película de Disney?",
+        "opciones": ["Un elefante", "Un ratón", "Un oso", "Un caballo"],
+        "correcta": "Un elefante",
+        "explicacion": "Dumbo es un elefante de grandes orejas que descubre que puede volar."
+    },
+    {
+        "categoria": "Animales",
+        "dificultad": 2,
+        "pregunta": "¿Qué ave puede volar hacia atrás?",
+        "opciones": ["Colibrí", "Águila", "Golondrina", "Flamenco"],
+        "correcta": "Colibrí",
+        "explicacion": "El colibrí puede volar hacia atrás gracias al movimiento especial de sus alas."
+    },
+    {
+        "categoria": "Cultura general",
+        "dificultad": 2,
+        "pregunta": "¿Qué día se celebra tradicionalmente la Nochevieja?",
+        "opciones": ["24 de diciembre", "31 de diciembre", "1 de enero", "6 de enero"],
+        "correcta": "31 de diciembre",
+        "explicacion": "La Nochevieja corresponde a la última noche del año, el 31 de diciembre."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 3,
+        "pregunta": "¿Qué escala se utiliza para medir la dureza de los minerales?",
+        "opciones": ["Escala de Richter", "Escala de Mohs", "Escala de Beaufort", "Escala Celsius"],
+        "correcta": "Escala de Mohs",
+        "explicacion": "La escala de Mohs ordena los minerales según su resistencia al rayado."
+    },
+    {
+        "categoria": "Series",
+        "dificultad": 2,
+        "pregunta": "¿Qué serie sigue la vida de un profesor convertido en fabricante de metanfetamina?",
+        "opciones": ["Breaking Bad", "Narcos", "Ozark", "Better Call Saul"],
+        "correcta": "Breaking Bad",
+        "explicacion": "Breaking Bad cuenta la transformación de Walter White tras comenzar a fabricar metanfetamina."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿Qué antigua civilización utilizaba jeroglíficos?",
+        "opciones": ["Egipcia", "Vikinga", "Fenicia", "Persa"],
+        "correcta": "Egipcia",
+        "explicacion": "Los antiguos egipcios utilizaron jeroglíficos en monumentos, templos y documentos."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es la capital de Costa Rica?",
+        "opciones": ["San José", "Liberia", "Cartago", "Heredia"],
+        "correcta": "San José",
+        "explicacion": "San José es la capital y principal centro político de Costa Rica."
+    },
+    {
+        "categoria": "Música",
+        "dificultad": 2,
+        "pregunta": "¿Qué cantante colombiana publicó Hips Don't Lie?",
+        "opciones": ["Shakira", "Karol G", "Paulina Rubio", "Gloria Estefan"],
+        "correcta": "Shakira",
+        "explicacion": "Hips Don't Lie fue interpretada por Shakira junto a Wyclef Jean."
+    },
+    {
+        "categoria": "Videojuegos",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es el nombre de la princesa que suele rescatar Mario?",
+        "opciones": ["Peach", "Zelda", "Daisy", "Rosalina"],
+        "correcta": "Peach",
+        "explicacion": "La princesa Peach gobierna el Reino Champiñón y aparece frecuentemente en la saga Mario."
+    },
+    {
+        "categoria": "Deportes",
+        "dificultad": 1,
+        "pregunta": "¿Qué objeto se golpea con una raqueta en el tenis?",
+        "opciones": ["Pelota", "Disco", "Volante", "Bola metálica"],
+        "correcta": "Pelota",
+        "explicacion": "En tenis, los jugadores golpean una pelota de goma cubierta de fieltro."
+    },
+    {
+        "categoria": "Tecnología",
+        "dificultad": 2,
+        "pregunta": "¿Qué significa la sigla USB?",
+        "opciones": ["Universal Serial Bus", "United System Base", "User Storage Block", "Universal Signal Band"],
+        "correcta": "Universal Serial Bus",
+        "explicacion": "USB es un estándar de conexión para transferir datos y suministrar energía."
+    },
+    {
+        "categoria": "Cine",
+        "dificultad": 2,
+        "pregunta": "¿En qué saga aparece el personaje Katniss Everdeen?",
+        "opciones": ["Los juegos del hambre", "Divergente", "Crepúsculo", "El corredor del laberinto"],
+        "correcta": "Los juegos del hambre",
+        "explicacion": "Katniss Everdeen es la protagonista de Los juegos del hambre."
+    },
+    {
+        "categoria": "Gastronomía",
+        "dificultad": 2,
+        "pregunta": "¿Qué bebida se obtiene principalmente de la fermentación de la uva?",
+        "opciones": ["Vino", "Cerveza", "Sidra", "Ron"],
+        "correcta": "Vino",
+        "explicacion": "El vino se obtiene mediante la fermentación alcohólica del mosto de uva."
+    },
+    {
+        "categoria": "Animales",
+        "dificultad": 3,
+        "pregunta": "¿Qué animal tiene la gestación más larga entre los mamíferos terrestres?",
+        "opciones": ["Elefante", "Jirafa", "Rinoceronte", "Hipopótamo"],
+        "correcta": "Elefante",
+        "explicacion": "La gestación de un elefante puede durar alrededor de 22 meses."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Qué unidad se utiliza para medir la intensidad de la corriente eléctrica?",
+        "opciones": ["Amperio", "Voltio", "Vatio", "Ohmio"],
+        "correcta": "Amperio",
+        "explicacion": "El amperio es la unidad del Sistema Internacional para medir corriente eléctrica."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 2,
+        "pregunta": "¿Qué país europeo tiene forma aproximada de hexágono?",
+        "opciones": ["Francia", "Alemania", "Polonia", "Austria"],
+        "correcta": "Francia",
+        "explicacion": "La Francia metropolitana recibe a veces el apodo de el Hexágono por su forma."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 3,
+        "pregunta": "¿Qué imperio fue gobernado por Moctezuma II a la llegada de Hernán Cortés?",
+        "opciones": ["Imperio azteca", "Imperio inca", "Imperio maya", "Imperio olmeca"],
+        "correcta": "Imperio azteca",
+        "explicacion": "Moctezuma II gobernaba el Imperio azteca cuando llegaron los conquistadores españoles."
+    },
+    {
+        "categoria": "Literatura",
+        "dificultad": 2,
+        "pregunta": "¿Qué escritora creó al detective Hércules Poirot?",
+        "opciones": ["Agatha Christie", "Virginia Woolf", "Jane Austen", "Mary Shelley"],
+        "correcta": "Agatha Christie",
+        "explicacion": "Hércules Poirot es uno de los detectives más famosos creados por Agatha Christie."
+    },
+    {
+        "categoria": "Cultura general",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es el primer mes del año?",
+        "opciones": ["Enero", "Febrero", "Marzo", "Diciembre"],
+        "correcta": "Enero",
+        "explicacion": "Enero es el primer mes del calendario gregoriano."
+    },
+    {
+        "categoria": "Espacio",
+        "dificultad": 2,
+        "pregunta": "¿Qué planeta es conocido por su gran mancha roja?",
+        "opciones": ["Júpiter", "Marte", "Saturno", "Neptuno"],
+        "correcta": "Júpiter",
+        "explicacion": "La Gran Mancha Roja de Júpiter es una enorme tormenta observada desde hace siglos."
+    }
+```
+
 ]
 ```
