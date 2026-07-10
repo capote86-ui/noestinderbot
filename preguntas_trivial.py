@@ -1264,6 +1264,230 @@ preguntas_trivial = [
         "correcta": "Enero",
         "explicacion": "Enero es el primer mes del calendario gregoriano."
     },
+        {
+        "categoria": "Geografía",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es la capital de Argentina?",
+        "opciones": ["Buenos Aires", "Córdoba", "Rosario", "Mendoza"],
+        "correcta": "Buenos Aires",
+        "explicacion": "Buenos Aires es la capital y la ciudad más poblada de Argentina."
+    },
+
+    {
+        "categoria": "Geografía",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es la capital de México?",
+        "opciones": ["Guadalajara", "Monterrey", "Ciudad de México", "Puebla"],
+        "correcta": "Ciudad de México",
+        "explicacion": "Ciudad de México es la capital del país desde la época colonial."
+    },
+
+    {
+        "categoria": "Geografía",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es el río más largo del mundo según la mayoría de estudios actuales?",
+        "opciones": ["Amazonas", "Nilo", "Yangtsé", "Misisipi"],
+        "correcta": "Amazonas",
+        "explicacion": "Las mediciones más recientes sitúan al Amazonas como el río más largo del mundo."
+    },
+
+    {
+        "categoria": "Ciencia",
+        "dificultad": 1,
+        "pregunta": "¿Cuántos huesos tiene aproximadamente un adulto?",
+        "opciones": ["206", "180", "230", "195"],
+        "correcta": "206",
+        "explicacion": "El esqueleto humano adulto suele estar formado por 206 huesos."
+    },
+
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Qué vitamina produce principalmente la piel con la luz solar?",
+        "opciones": ["Vitamina A", "Vitamina C", "Vitamina D", "Vitamina K"],
+        "correcta": "Vitamina D",
+        "explicacion": "La vitamina D se sintetiza en la piel gracias a la radiación solar."
+    },
+
+    {
+        "categoria": "Historia",
+        "dificultad": 1,
+        "pregunta": "¿Quién descubrió América para los europeos en 1492?",
+        "opciones": ["Cristóbal Colón", "Magallanes", "Américo Vespucio", "Vasco da Gama"],
+        "correcta": "Cristóbal Colón",
+        "explicacion": "Cristóbal Colón llegó a América en 1492 durante su primer viaje."
+    },
+
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿En qué país comenzaron los Juegos Olímpicos antiguos?",
+        "opciones": ["Italia", "Grecia", "Egipto", "Turquía"],
+        "correcta": "Grecia",
+        "explicacion": "Los primeros Juegos Olímpicos se celebraban en Olimpia, Grecia."
+    },
+
+    {
+        "categoria": "Deportes",
+        "dificultad": 1,
+        "pregunta": "¿Cuántos jugadores tiene un equipo de baloncesto en la pista?",
+        "opciones": ["5", "6", "7", "11"],
+        "correcta": "5",
+        "explicacion": "Cada equipo juega con cinco jugadores en la cancha."
+    },
+
+    {
+        "categoria": "Deportes",
+        "dificultad": 2,
+        "pregunta": "¿Qué país ganó el Mundial de fútbol de 2022?",
+        "opciones": ["Francia", "Argentina", "Brasil", "Croacia"],
+        "correcta": "Argentina",
+        "explicacion": "Argentina derrotó a Francia en la final disputada en Catar."
+    },
+
+    {
+        "categoria": "Música",
+        "dificultad": 1,
+        "pregunta": "¿Qué instrumento tiene normalmente 88 teclas?",
+        "opciones": ["Órgano", "Piano", "Acordeón", "Sintetizador"],
+        "correcta": "Piano",
+        "explicacion": "Un piano estándar posee 88 teclas."
+    },
+
+    {
+        "categoria": "Música",
+        "dificultad": 2,
+        "pregunta": "¿De qué país es el grupo Coldplay?",
+        "opciones": ["Estados Unidos", "Irlanda", "Reino Unido", "Australia"],
+        "correcta": "Reino Unido",
+        "explicacion": "Coldplay se formó en Londres."
+    },
+
+    {
+        "categoria": "Series",
+        "dificultad": 1,
+        "pregunta": "¿Cómo se llama el dragón blanco de Daenerys en Juego de Tronos?",
+        "opciones": ["Drogon", "Rhaegal", "Viserion", "Balerion"],
+        "correcta": "Viserion",
+        "explicacion": "Viserion era el dragón de color crema que posteriormente fue convertido en caminante blanco."
+    },
+
+    {
+        "categoria": "Series",
+        "dificultad": 2,
+        "pregunta": "¿En qué ciudad transcurre Friends?",
+        "opciones": ["Chicago", "Nueva York", "Boston", "Los Ángeles"],
+        "correcta": "Nueva York",
+        "explicacion": "Friends se desarrolla en Manhattan, Nueva York."
+    },
+
+    {
+        "categoria": "Cine",
+        "dificultad": 1,
+        "pregunta": "¿Qué juguete es amigo de Woody en Toy Story?",
+        "opciones": ["Buzz Lightyear", "Rex", "Slinky", "Hamm"],
+        "correcta": "Buzz Lightyear",
+        "explicacion": "Buzz Lightyear se convierte en el mejor amigo de Woody."
+    },
+
+    {
+        "categoria": "Cine",
+        "dificultad": 2,
+        "pregunta": "¿Qué película ganó el Óscar a Mejor Película en 1998 tras hundir un barco muy famoso?",
+        "opciones": ["Titanic", "Braveheart", "Gladiator", "Avatar"],
+        "correcta": "Titanic",
+        "explicacion": "Titanic ganó 11 premios Óscar."
+    },
+
+    {
+        "categoria": "Tecnología",
+        "dificultad": 1,
+        "pregunta": "¿Qué navegador desarrolla Google?",
+        "opciones": ["Firefox", "Edge", "Chrome", "Opera"],
+        "correcta": "Chrome",
+        "explicacion": "Google Chrome es el navegador más utilizado del mundo."
+    },
+
+    {
+        "categoria": "Tecnología",
+        "dificultad": 2,
+        "pregunta": "¿Qué significa Wi-Fi?",
+        "opciones": ["No significa nada oficialmente", "Wireless Fidelity", "Wide File", "Wireless Fiber"],
+        "correcta": "No significa nada oficialmente",
+        "explicacion": "Wi-Fi es una marca comercial; oficialmente no significa Wireless Fidelity."
+    },
+
+    {
+        "categoria": "Animales",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es el mamífero terrestre más rápido?",
+        "opciones": ["León", "Guepardo", "Antílope", "Caballo"],
+        "correcta": "Guepardo",
+        "explicacion": "El guepardo puede superar los 100 km/h en carreras cortas."
+    },
+
+    {
+        "categoria": "Animales",
+        "dificultad": 2,
+        "pregunta": "¿Qué animal duerme colgado boca abajo?",
+        "opciones": ["Murciélago", "Koala", "Perezoso", "Lémur"],
+        "correcta": "Murciélago",
+        "explicacion": "Los murciélagos descansan colgados gracias a la anatomía de sus patas."
+    },
+
+    {
+        "categoria": "Espacio",
+        "dificultad": 1,
+        "pregunta": "¿Cuál es la estrella del sistema solar?",
+        "opciones": ["Luna", "Sirio", "Sol", "Venus"],
+        "correcta": "Sol",
+        "explicacion": "El Sol es la única estrella de nuestro sistema solar."
+    },
+
+    {
+        "categoria": "Espacio",
+        "dificultad": 2,
+        "pregunta": "¿Quién fue la primera persona en pisar la Luna?",
+        "opciones": ["Buzz Aldrin", "Neil Armstrong", "Yuri Gagarin", "Michael Collins"],
+        "correcta": "Neil Armstrong",
+        "explicacion": "Neil Armstrong descendió del Apolo 11 el 20 de julio de 1969."
+    },
+
+    {
+        "categoria": "Literatura",
+        "dificultad": 1,
+        "pregunta": "¿Quién escribió Don Quijote de la Mancha?",
+        "opciones": ["Lope de Vega", "Miguel de Cervantes", "Quevedo", "Góngora"],
+        "correcta": "Miguel de Cervantes",
+        "explicacion": "Es considerada una de las obras más importantes de la literatura universal."
+    },
+
+    {
+        "categoria": "Literatura",
+        "dificultad": 2,
+        "pregunta": "¿Cómo se llama el colegio de Harry Potter?",
+        "opciones": ["Hogwarts", "Beauxbatons", "Durmstrang", "Ilvermorny"],
+        "correcta": "Hogwarts",
+        "explicacion": "Harry estudia magia en Hogwarts."
+    },
+
+    {
+        "categoria": "Cultura general",
+        "dificultad": 1,
+        "pregunta": "¿Cuántos días tiene un año no bisiesto?",
+        "opciones": ["364", "365", "366", "360"],
+        "correcta": "365",
+        "explicacion": "Un año normal tiene 365 días."
+    },
+
+    {
+        "categoria": "Cultura general",
+        "dificultad": 2,
+        "pregunta": "¿Qué color resulta de mezclar azul y amarillo?",
+        "opciones": ["Verde", "Morado", "Naranja", "Marrón"],
+        "correcta": "Verde",
+        "explicacion": "En mezcla de pigmentos, azul y amarillo producen verde."
+    },
     {
         "categoria": "Espacio",
         "dificultad": 2,
