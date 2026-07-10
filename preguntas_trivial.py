@@ -1,4 +1,4 @@
-```python
+
 preguntas_trivial = [
     {
         "categoria": "Geografía",
@@ -879,8 +879,7 @@ preguntas_trivial = [
         "opciones": ["Jurassic Park", "Godzilla", "King Kong", "Avatar"],
         "correcta": "Jurassic Park",
         "explicacion": "Jurassic Park presenta un parque temático con dinosaurios creados mediante ingeniería genética."
-    }
-    ```python
+    },
     {
         "categoria": "Geografía",
         "dificultad": 1,
@@ -1273,7 +1272,7 @@ preguntas_trivial = [
         "correcta": "Júpiter",
         "explicacion": "La Gran Mancha Roja de Júpiter es una enorme tormenta observada desde hace siglos."
     }
-```
+
 
 ]
-```
+
