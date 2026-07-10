@@ -1488,6 +1488,334 @@ preguntas_trivial = [
         "correcta": "Verde",
         "explicacion": "En mezcla de pigmentos, azul y amarillo producen verde."
     },
+        {
+        "categoria": "Geografía",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es la capital de Nueva Zelanda?",
+        "opciones": ["Auckland", "Wellington", "Christchurch", "Hamilton"],
+        "correcta": "Wellington",
+        "explicacion": "Wellington es la capital de Nueva Zelanda, aunque Auckland es su ciudad más poblada."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿Quién fue el primer presidente de Estados Unidos?",
+        "opciones": ["Abraham Lincoln", "George Washington", "Thomas Jefferson", "John Adams"],
+        "correcta": "George Washington",
+        "explicacion": "George Washington fue presidente de Estados Unidos entre 1789 y 1797."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Qué órgano produce la insulina?",
+        "opciones": ["Hígado", "Páncreas", "Riñón", "Estómago"],
+        "correcta": "Páncreas",
+        "explicacion": "La insulina se produce en las células beta del páncreas."
+    },
+    {
+        "categoria": "Cine",
+        "dificultad": 1,
+        "pregunta": "¿Cómo se llama el león protagonista de El rey león?",
+        "opciones": ["Mufasa", "Simba", "Scar", "Nala"],
+        "correcta": "Simba",
+        "explicacion": "Simba es el protagonista de El rey león y heredero del reino de su padre, Mufasa."
+    },
+    {
+        "categoria": "Música",
+        "dificultad": 2,
+        "pregunta": "¿Qué banda lanzó la canción Smells Like Teen Spirit?",
+        "opciones": ["Nirvana", "Metallica", "Pearl Jam", "Green Day"],
+        "correcta": "Nirvana",
+        "explicacion": "Smells Like Teen Spirit fue publicada por Nirvana en 1991."
+    },
+    {
+        "categoria": "Animales",
+        "dificultad": 2,
+        "pregunta": "¿Qué animal tiene la lengua más larga en proporción a su cuerpo?",
+        "opciones": ["Camaleón", "Jirafa", "Oso hormiguero", "Serpiente"],
+        "correcta": "Camaleón",
+        "explicacion": "La lengua de algunos camaleones puede alcanzar una longitud similar o superior a la de su cuerpo."
+    },
+    {
+        "categoria": "Deportes",
+        "dificultad": 2,
+        "pregunta": "¿Cuántos sets debe ganar normalmente un jugador para vencer un partido masculino de Grand Slam?",
+        "opciones": ["Dos", "Tres", "Cuatro", "Cinco"],
+        "correcta": "Tres",
+        "explicacion": "Los partidos masculinos de Grand Slam se disputan al mejor de cinco sets."
+    },
+    {
+        "categoria": "Tecnología",
+        "dificultad": 2,
+        "pregunta": "¿Qué lenguaje se utiliza principalmente para dar estilo visual a una página web?",
+        "opciones": ["HTML", "CSS", "SQL", "Python"],
+        "correcta": "CSS",
+        "explicacion": "CSS controla colores, tamaños, distribución y otros aspectos visuales de una página web."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 3,
+        "pregunta": "¿Cuál es la capital de Kazajistán?",
+        "opciones": ["Almaty", "Astaná", "Taskent", "Biskek"],
+        "correcta": "Astaná",
+        "explicacion": "Astaná es la capital de Kazajistán; Almaty fue la capital anterior."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿Qué revolución comenzó en Francia en 1789?",
+        "opciones": ["Revolución Industrial", "Revolución francesa", "Revolución rusa", "Revolución gloriosa"],
+        "correcta": "Revolución francesa",
+        "explicacion": "La Revolución francesa comenzó en 1789 y transformó profundamente la política europea."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 1,
+        "pregunta": "¿Qué gas expulsamos principalmente al respirar?",
+        "opciones": ["Oxígeno", "Dióxido de carbono", "Helio", "Hidrógeno"],
+        "correcta": "Dióxido de carbono",
+        "explicacion": "El cuerpo utiliza oxígeno y elimina dióxido de carbono como producto del metabolismo."
+    },
+    {
+        "categoria": "Series",
+        "dificultad": 2,
+        "pregunta": "¿Cómo se llama el protagonista de Peaky Blinders?",
+        "opciones": ["Thomas Shelby", "Arthur Morgan", "Walter White", "Jax Teller"],
+        "correcta": "Thomas Shelby",
+        "explicacion": "Thomas Shelby, interpretado por Cillian Murphy, lidera la familia Shelby."
+    },
+    {
+        "categoria": "Videojuegos",
+        "dificultad": 2,
+        "pregunta": "¿Qué videojuego populariza una isla en la que cien jugadores compiten hasta que queda uno?",
+        "opciones": ["Fortnite", "Minecraft", "Among Us", "FIFA"],
+        "correcta": "Fortnite",
+        "explicacion": "El modo Battle Royale de Fortnite enfrenta a numerosos jugadores hasta que queda un único superviviente."
+    },
+    {
+        "categoria": "Literatura",
+        "dificultad": 2,
+        "pregunta": "¿Quién escribió 1984?",
+        "opciones": ["George Orwell", "Aldous Huxley", "Ray Bradbury", "J. D. Salinger"],
+        "correcta": "George Orwell",
+        "explicacion": "George Orwell publicó 1984 en 1949."
+    },
+    {
+        "categoria": "Gastronomía",
+        "dificultad": 2,
+        "pregunta": "¿Qué queso se utiliza tradicionalmente en una ensalada griega?",
+        "opciones": ["Cheddar", "Feta", "Brie", "Gorgonzola"],
+        "correcta": "Feta",
+        "explicacion": "El queso feta es uno de los ingredientes más característicos de la ensalada griega."
+    },
+    {
+        "categoria": "Espacio",
+        "dificultad": 2,
+        "pregunta": "¿Qué planeta gira prácticamente de lado?",
+        "opciones": ["Urano", "Marte", "Mercurio", "Júpiter"],
+        "correcta": "Urano",
+        "explicacion": "Urano tiene una inclinación axial de unos 98 grados, por lo que parece girar tumbado."
+    },
+    {
+        "categoria": "Cultura general",
+        "dificultad": 1,
+        "pregunta": "¿Cuántas letras tiene el alfabeto español actual?",
+        "opciones": ["25", "26", "27", "29"],
+        "correcta": "27",
+        "explicacion": "El alfabeto español tiene 27 letras, incluida la ñ."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es la capital de Panamá?",
+        "opciones": ["Colón", "Ciudad de Panamá", "David", "Santiago"],
+        "correcta": "Ciudad de Panamá",
+        "explicacion": "Ciudad de Panamá es la capital del país y se encuentra junto al canal de Panamá."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 3,
+        "pregunta": "¿Qué emperador francés fue derrotado definitivamente en Waterloo?",
+        "opciones": ["Napoleón Bonaparte", "Luis XIV", "Carlomagno", "Robespierre"],
+        "correcta": "Napoleón Bonaparte",
+        "explicacion": "Napoleón fue derrotado en la batalla de Waterloo en 1815."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es la unidad básica de la vida?",
+        "opciones": ["Átomo", "Célula", "Molécula", "Tejido"],
+        "correcta": "Célula",
+        "explicacion": "La célula es la unidad estructural y funcional básica de los seres vivos."
+    },
+    {
+        "categoria": "Cine",
+        "dificultad": 2,
+        "pregunta": "¿Qué actriz interpretó a Hermione Granger en las películas de Harry Potter?",
+        "opciones": ["Emma Watson", "Emma Stone", "Keira Knightley", "Natalie Portman"],
+        "correcta": "Emma Watson",
+        "explicacion": "Emma Watson interpretó a Hermione Granger durante toda la saga cinematográfica."
+    },
+    {
+        "categoria": "Música",
+        "dificultad": 2,
+        "pregunta": "¿Quién compuso Las cuatro estaciones?",
+        "opciones": ["Mozart", "Beethoven", "Vivaldi", "Bach"],
+        "correcta": "Vivaldi",
+        "explicacion": "Antonio Vivaldi compuso el conjunto de conciertos conocido como Las cuatro estaciones."
+    },
+    {
+        "categoria": "Animales",
+        "dificultad": 2,
+        "pregunta": "¿Qué animal es el más alto del mundo?",
+        "opciones": ["Elefante", "Jirafa", "Avestruz", "Camello"],
+        "correcta": "Jirafa",
+        "explicacion": "La jirafa puede superar los cinco metros de altura."
+    },
+    {
+        "categoria": "Deportes",
+        "dificultad": 2,
+        "pregunta": "¿Qué país es considerado la cuna del judo?",
+        "opciones": ["China", "Japón", "Corea del Sur", "Tailandia"],
+        "correcta": "Japón",
+        "explicacion": "El judo fue creado en Japón por Jigoro Kano a finales del siglo XIX."
+    },
+    {
+        "categoria": "Tecnología",
+        "dificultad": 2,
+        "pregunta": "¿Qué empresa fabrica el iPhone?",
+        "opciones": ["Samsung", "Apple", "Google", "Huawei"],
+        "correcta": "Apple",
+        "explicacion": "Apple presentó el primer iPhone en 2007."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 2,
+        "pregunta": "¿Qué país tiene como capital a Montevideo?",
+        "opciones": ["Paraguay", "Uruguay", "Chile", "Argentina"],
+        "correcta": "Uruguay",
+        "explicacion": "Montevideo es la capital y principal ciudad de Uruguay."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿Qué civilización desarrolló un calendario muy avanzado en Mesoamérica?",
+        "opciones": ["Mayas", "Romanos", "Vikingos", "Fenicios"],
+        "correcta": "Mayas",
+        "explicacion": "Los mayas desarrollaron complejos sistemas calendáricos y astronómicos."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 3,
+        "pregunta": "¿Qué elemento químico tiene el símbolo Na?",
+        "opciones": ["Nitrógeno", "Sodio", "Neón", "Níquel"],
+        "correcta": "Sodio",
+        "explicacion": "Na procede del nombre latino del sodio: natrium."
+    },
+    {
+        "categoria": "Series",
+        "dificultad": 1,
+        "pregunta": "¿Qué familia protagoniza La casa de papel?",
+        "opciones": ["Una banda de atracadores", "Una familia real", "Un grupo de policías", "Un equipo médico"],
+        "correcta": "Una banda de atracadores",
+        "explicacion": "La serie sigue a una banda organizada por el Profesor para realizar grandes atracos."
+    },
+    {
+        "categoria": "Videojuegos",
+        "dificultad": 2,
+        "pregunta": "¿Qué personaje azul de Sega corre a gran velocidad?",
+        "opciones": ["Sonic", "Mega Man", "Crash", "Kirby"],
+        "correcta": "Sonic",
+        "explicacion": "Sonic es un erizo azul conocido por su enorme velocidad."
+    },
+    {
+        "categoria": "Literatura",
+        "dificultad": 3,
+        "pregunta": "¿Quién escribió Crimen y castigo?",
+        "opciones": ["Fiódor Dostoyevski", "León Tolstói", "Antón Chéjov", "Nikolái Gógol"],
+        "correcta": "Fiódor Dostoyevski",
+        "explicacion": "Crimen y castigo fue publicada por Dostoyevski en 1866."
+    },
+    {
+        "categoria": "Gastronomía",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es el ingrediente principal del falafel?",
+        "opciones": ["Garbanzos", "Arroz", "Patata", "Carne picada"],
+        "correcta": "Garbanzos",
+        "explicacion": "El falafel se prepara habitualmente con garbanzos o habas trituradas."
+    },
+    {
+        "categoria": "Espacio",
+        "dificultad": 3,
+        "pregunta": "¿Cuál es la estrella más cercana a la Tierra después del Sol?",
+        "opciones": ["Sirio", "Próxima Centauri", "Betelgeuse", "Vega"],
+        "correcta": "Próxima Centauri",
+        "explicacion": "Próxima Centauri se encuentra a unos 4,24 años luz de la Tierra."
+    },
+    {
+        "categoria": "Cultura general",
+        "dificultad": 2,
+        "pregunta": "¿Qué pieza del ajedrez puede moverse en cualquier dirección?",
+        "opciones": ["Reina", "Torre", "Alfil", "Caballo"],
+        "correcta": "Reina",
+        "explicacion": "La reina puede moverse horizontal, vertical y diagonalmente."
+    },
+    {
+        "categoria": "Geografía",
+        "dificultad": 3,
+        "pregunta": "¿Cuál es la capital de Mongolia?",
+        "opciones": ["Ulán Bator", "Astaná", "Dusambé", "Ereván"],
+        "correcta": "Ulán Bator",
+        "explicacion": "Ulán Bator es la capital y la ciudad más poblada de Mongolia."
+    },
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿Qué reina gobernó Inglaterra durante gran parte del siglo XVI y dio nombre a una era?",
+        "opciones": ["Isabel I", "Victoria", "Ana", "María II"],
+        "correcta": "Isabel I",
+        "explicacion": "El reinado de Isabel I dio nombre a la época isabelina."
+    },
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Qué estructura del ojo regula la cantidad de luz que entra?",
+        "opciones": ["Iris", "Retina", "Córnea", "Nervio óptico"],
+        "correcta": "Iris",
+        "explicacion": "El iris modifica el tamaño de la pupila para controlar la entrada de luz."
+    },
+    {
+        "categoria": "Cine",
+        "dificultad": 2,
+        "pregunta": "¿En qué película aparece el personaje de Forrest Gump?",
+        "opciones": ["Forrest Gump", "Náufrago", "Big", "Salvar al soldado Ryan"],
+        "correcta": "Forrest Gump",
+        "explicacion": "Tom Hanks interpreta al protagonista de la película Forrest Gump."
+    },
+    {
+        "categoria": "Música",
+        "dificultad": 2,
+        "pregunta": "¿Qué cantante fue líder de la banda Queen?",
+        "opciones": ["Freddie Mercury", "David Bowie", "Elton John", "Mick Jagger"],
+        "correcta": "Freddie Mercury",
+        "explicacion": "Freddie Mercury fue cantante, compositor y líder de Queen."
+    },
+    {
+        "categoria": "Animales",
+        "dificultad": 3,
+        "pregunta": "¿Qué animal posee sangre azul debido a la hemocianina?",
+        "opciones": ["Pulpo", "Delfín", "Tiburón", "Cocodrilo"],
+        "correcta": "Pulpo",
+        "explicacion": "Los pulpos utilizan hemocianina, una proteína basada en cobre que da un tono azulado a su sangre."
+    },
+    {
+        "categoria": "Deportes",
+        "dificultad": 2,
+        "pregunta": "¿Qué selección ha ganado más Copas del Mundo masculinas de fútbol?",
+        "opciones": ["Brasil", "Alemania", "Italia", "Argentina"],
+        "correcta": "Brasil",
+        "explicacion": "Brasil ha ganado cinco Copas del Mundo masculinas."
+    },
     {
         "categoria": "Espacio",
         "dificultad": 2,
