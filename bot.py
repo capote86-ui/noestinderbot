@@ -460,7 +460,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
-    if mensaje.startswith("!ranking") or mensaje.startswith("/ranking"):
+    if mensaje == "!ranking" or mensaje == "/ranking":
         if not contador_mensajes:
             await update.message.reply_text("Todavía no tengo suficiente cotilleo estadístico 😭")
             return
@@ -907,7 +907,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await cancelar_trivial(update, chat_id, admin_ids)
         return
 
-    if mensaje.startswith("!rankingtrivial") or mensaje.startswith("/rankingtrivial"):
+    if mensaje == "!rankingtrivial" or mensaje == "/rankingtrivial":
         await mostrar_ranking_trivial(update)
         return
     for trigger in respuestas:
