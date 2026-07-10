@@ -1816,6 +1816,230 @@ preguntas_trivial = [
         "correcta": "Brasil",
         "explicacion": "Brasil ha ganado cinco Copas del Mundo masculinas."
     },
+        {
+        "categoria": "Geografía",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es la capital de Finlandia?",
+        "opciones": ["Oslo", "Helsinki", "Estocolmo", "Reikiavik"],
+        "correcta": "Helsinki",
+        "explicacion": "Helsinki es la capital y ciudad más poblada de Finlandia."
+    },
+
+    {
+        "categoria": "Geografía",
+        "dificultad": 2,
+        "pregunta": "¿Qué desierto es el más grande del mundo?",
+        "opciones": ["Sáhara", "Gobi", "Antártico", "Atacama"],
+        "correcta": "Antártico",
+        "explicacion": "Aunque solemos pensar en el Sáhara, la Antártida es el mayor desierto del planeta."
+    },
+
+    {
+        "categoria": "Historia",
+        "dificultad": 2,
+        "pregunta": "¿En qué ciudad fue asesinado Julio César?",
+        "opciones": ["Atenas", "Roma", "Pompeya", "Milán"],
+        "correcta": "Roma",
+        "explicacion": "Julio César fue asesinado en Roma en el año 44 a. C."
+    },
+
+    {
+        "categoria": "Historia",
+        "dificultad": 3,
+        "pregunta": "¿Qué muro cayó en 1989 simbolizando el fin de la Guerra Fría?",
+        "opciones": ["Muro de Londres", "Muro de Berlín", "Gran Muralla China", "Muro de Adriano"],
+        "correcta": "Muro de Berlín",
+        "explicacion": "La caída del Muro de Berlín marcó un cambio histórico en Europa."
+    },
+
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Qué planeta tiene más lunas conocidas actualmente?",
+        "opciones": ["Júpiter", "Saturno", "Urano", "Neptuno"],
+        "correcta": "Saturno",
+        "explicacion": "Actualmente Saturno es el planeta con mayor número de satélites confirmados."
+    },
+
+    {
+        "categoria": "Ciencia",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es el metal líquido a temperatura ambiente?",
+        "opciones": ["Mercurio", "Plomo", "Aluminio", "Estaño"],
+        "correcta": "Mercurio",
+        "explicacion": "El mercurio permanece líquido a temperatura ambiente."
+    },
+
+    {
+        "categoria": "Tecnología",
+        "dificultad": 1,
+        "pregunta": "¿Qué significa CPU?",
+        "opciones": ["Central Processing Unit", "Computer Personal Unit", "Control Process Utility", "Central Program Unit"],
+        "correcta": "Central Processing Unit",
+        "explicacion": "La CPU es la unidad central de procesamiento de un ordenador."
+    },
+
+    {
+        "categoria": "Tecnología",
+        "dificultad": 2,
+        "pregunta": "¿Qué empresa desarrolló Windows?",
+        "opciones": ["Apple", "Microsoft", "IBM", "Google"],
+        "correcta": "Microsoft",
+        "explicacion": "Microsoft lanzó la primera versión de Windows en 1985."
+    },
+
+    {
+        "categoria": "Cine",
+        "dificultad": 2,
+        "pregunta": "¿Quién dirigió Titanic?",
+        "opciones": ["Steven Spielberg", "James Cameron", "Ridley Scott", "Christopher Nolan"],
+        "correcta": "James Cameron",
+        "explicacion": "James Cameron escribió y dirigió Titanic."
+    },
+
+    {
+        "categoria": "Cine",
+        "dificultad": 2,
+        "pregunta": "¿Cómo se llama el villano principal de El Rey León?",
+        "opciones": ["Scar", "Simba", "Mufasa", "Zazú"],
+        "correcta": "Scar",
+        "explicacion": "Scar es el hermano de Mufasa y antagonista principal."
+    },
+
+    {
+        "categoria": "Series",
+        "dificultad": 2,
+        "pregunta": "¿Cómo se llama el profesor de química protagonista de Breaking Bad?",
+        "opciones": ["Walter White", "Saul Goodman", "Jesse Pinkman", "Hank Schrader"],
+        "correcta": "Walter White",
+        "explicacion": "Walter White inicia la fabricación de metanfetamina tras ser diagnosticado de cáncer."
+    },
+
+    {
+        "categoria": "Series",
+        "dificultad": 2,
+        "pregunta": "¿Qué serie transcurre en el hospital Seattle Grace?",
+        "opciones": ["House", "Anatomía de Grey", "Urgencias", "The Good Doctor"],
+        "correcta": "Anatomía de Grey",
+        "explicacion": "Gran parte de la serie se desarrolla en el Seattle Grace Hospital."
+    },
+
+    {
+        "categoria": "Videojuegos",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es el mineral más valioso en Minecraft antes de la netherita?",
+        "opciones": ["Diamante", "Esmeralda", "Oro", "Redstone"],
+        "correcta": "Diamante",
+        "explicacion": "Durante muchos años el diamante fue el material más valioso del juego."
+    },
+
+    {
+        "categoria": "Videojuegos",
+        "dificultad": 2,
+        "pregunta": "¿Qué mascota acompaña habitualmente a Link?",
+        "opciones": ["Navi", "Kirby", "Toad", "Yoshi"],
+        "correcta": "Navi",
+        "explicacion": "Navi aparece en Ocarina of Time como guía de Link."
+    },
+
+    {
+        "categoria": "Música",
+        "dificultad": 2,
+        "pregunta": "¿Qué grupo interpretó Bohemian Rhapsody?",
+        "opciones": ["Queen", "The Beatles", "ABBA", "Pink Floyd"],
+        "correcta": "Queen",
+        "explicacion": "Bohemian Rhapsody fue publicada por Queen en 1975."
+    },
+
+    {
+        "categoria": "Música",
+        "dificultad": 2,
+        "pregunta": "¿Qué cantante es conocido como El Rey del Pop?",
+        "opciones": ["Prince", "Michael Jackson", "Elvis Presley", "Bruno Mars"],
+        "correcta": "Michael Jackson",
+        "explicacion": "Michael Jackson recibió el sobrenombre de Rey del Pop."
+    },
+
+    {
+        "categoria": "Animales",
+        "dificultad": 2,
+        "pregunta": "¿Cuál es el ave más grande del mundo?",
+        "opciones": ["Águila", "Avestruz", "Cóndor", "Emú"],
+        "correcta": "Avestruz",
+        "explicacion": "El avestruz es el ave de mayor tamaño existente."
+    },
+
+    {
+        "categoria": "Animales",
+        "dificultad": 2,
+        "pregunta": "¿Qué animal tiene ocho brazos?",
+        "opciones": ["Calamar", "Pulpo", "Sepia", "Estrella de mar"],
+        "correcta": "Pulpo",
+        "explicacion": "Los pulpos poseen ocho brazos con ventosas."
+    },
+
+    {
+        "categoria": "Deportes",
+        "dificultad": 1,
+        "pregunta": "¿En qué deporte compiten Rafael Nadal y Carlos Alcaraz?",
+        "opciones": ["Pádel", "Tenis", "Golf", "Baloncesto"],
+        "correcta": "Tenis",
+        "explicacion": "Ambos son tenistas españoles."
+    },
+
+    {
+        "categoria": "Deportes",
+        "dificultad": 2,
+        "pregunta": "¿Cuántos jugadores forman un equipo de voleibol en pista?",
+        "opciones": ["5", "6", "7", "8"],
+        "correcta": "6",
+        "explicacion": "Cada equipo juega con seis jugadores."
+    },
+
+    {
+        "categoria": "Literatura",
+        "dificultad": 2,
+        "pregunta": "¿Quién escribió El principito?",
+        "opciones": ["Julio Verne", "Antoine de Saint-Exupéry", "Victor Hugo", "Albert Camus"],
+        "correcta": "Antoine de Saint-Exupéry",
+        "explicacion": "El principito fue publicado en 1943."
+    },
+
+    {
+        "categoria": "Literatura",
+        "dificultad": 2,
+        "pregunta": "¿Cómo se llama el hobbit protagonista de El Señor de los Anillos?",
+        "opciones": ["Bilbo", "Frodo", "Sam", "Pippin"],
+        "correcta": "Frodo",
+        "explicacion": "Frodo Bolsón es el Portador del Anillo."
+    },
+
+    {
+        "categoria": "Espacio",
+        "dificultad": 2,
+        "pregunta": "¿Qué planeta recibe el sobrenombre de gigante gaseoso?",
+        "opciones": ["Júpiter", "Marte", "Mercurio", "Venus"],
+        "correcta": "Júpiter",
+        "explicacion": "Júpiter es el mayor gigante gaseoso del Sistema Solar."
+    },
+
+    {
+        "categoria": "Cultura general",
+        "dificultad": 2,
+        "pregunta": "¿Cuántos lados tiene un octógono?",
+        "opciones": ["6", "7", "8", "9"],
+        "correcta": "8",
+        "explicacion": "Un octógono posee ocho lados."
+    },
+
+    {
+        "categoria": "Curiosidades",
+        "dificultad": 3,
+        "pregunta": "¿Cuál es el único continente sin reptiles autóctonos?",
+        "opciones": ["Europa", "Antártida", "Oceanía", "América"],
+        "correcta": "Antártida",
+        "explicacion": "Las condiciones extremas impiden la existencia de reptiles autóctonos."
+    },
     {
         "categoria": "Espacio",
         "dificultad": 2,
