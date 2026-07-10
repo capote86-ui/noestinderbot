@@ -13,6 +13,46 @@ def nombre_usuario(user):
     return user.first_name or "Alguien"
 
 
+def estrellas(dificultad):
+    try:
+        dificultad = int(dificultad)
+    except Exception:
+        dificultad = 1
+
+    if dificultad <= 1:
+        return "⭐ Fácil"
+    if dificultad == 2:
+        return "⭐⭐ Media"
+    if dificultad == 3:
+        return "⭐⭐⭐ Difícil"
+    return "⭐⭐⭐⭐ Experto"
+
+
+def preparar_pregunta(pregunta):
+    opciones = pregunta["opciones"].copy()
+
+    correcta = pregunta["correcta"]
+
+    # Compatible con formato antiguo: correcta = "A", "B", "C" o "D"
+    if correcta in ["A", "B", "C", "D"]:
+        correcta_texto = pregunta["opciones"]["ABCD".index(correcta)]
+    else:
+        correcta_texto = correcta
+
+    random.shuffle(opciones)
+
+    letras = ["A", "B", "C", "D"]
+    opciones_mezcladas = dict(zip(letras, opciones))
+
+    letra_correcta = None
+    for letra, texto in opciones_mezcladas.items():
+        if texto == correcta_texto:
+            letra_correcta = letra
+            break
+
+    return opciones_mezcladas, correcta_texto, letra_correcta
+
+
 async def iniciar_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE, chat_id: int, admin_ids: list):
     if update.effective_user.id not in admin_ids:
         await update.message.reply_text("🚫 Solo los administradores pueden iniciar un trivial.")
@@ -22,7 +62,10 @@ async def iniciar_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE, ch
         await update.message.reply_text("Ya hay un trivial activo en este grupo.")
         return
 
-    preguntas_partida = random.sample(preguntas_trivial, min(15, len(preguntas_trivial)))
+    preguntas_partida = random.sample(
+        preguntas_trivial,
+        min(15, len(preguntas_trivial))
+    )
 
     trivials_activos[chat_id] = {
         "indice": 0,
@@ -32,7 +75,10 @@ async def iniciar_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE, ch
         "respuestas": {},
         "mensaje_id": None,
         "estado": "inscripcion",
-        "ronda": 0
+        "ronda": 0,
+        "opciones_actuales": {},
+        "correcta_texto": None,
+        "letra_correcta": None
     }
 
     teclado = InlineKeyboardMarkup([[
@@ -95,20 +141,32 @@ async def enviar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: i
         return
 
     pregunta = partida["preguntas"][indice]
+
+    opciones_mezcladas, correcta_texto, letra_correcta = preparar_pregunta(pregunta)
+
     partida["respuestas"] = {}
     partida["estado"] = "pregunta"
     partida["ronda"] += 1
+    partida["opciones_actuales"] = opciones_mezcladas
+    partida["correcta_texto"] = correcta_texto
+    partida["letra_correcta"] = letra_correcta
+
     ronda_actual = partida["ronda"]
+
+    categoria = pregunta.get("categoria", "Random")
+    dificultad = estrellas(pregunta.get("dificultad", 1))
 
     texto = (
         f"🧠 TRIVIAL NO ES TINDER\n\n"
         f"Pregunta {indice + 1}/15\n"
+        f"📚 Categoría: {categoria}\n"
+        f"{dificultad}\n"
         f"⏱️ Tenéis 20 segundos para responder.\n\n"
         f"{pregunta['pregunta']}\n\n"
-        f"A) {pregunta['opciones'][0]}\n"
-        f"B) {pregunta['opciones'][1]}\n"
-        f"C) {pregunta['opciones'][2]}\n"
-        f"D) {pregunta['opciones'][3]}"
+        f"A) {opciones_mezcladas['A']}\n"
+        f"B) {opciones_mezcladas['B']}\n"
+        f"C) {opciones_mezcladas['C']}\n"
+        f"D) {opciones_mezcladas['D']}"
     )
 
     teclado = InlineKeyboardMarkup([[
@@ -160,19 +218,24 @@ async def cerrar_pregunta_trivial(context: ContextTypes.DEFAULT_TYPE, chat_id: i
 
     indice = partida["indice"]
     pregunta = partida["preguntas"][indice]
-    correcta = pregunta["correcta"]
+
+    correcta_texto = partida["correcta_texto"]
+    letra_correcta = partida["letra_correcta"]
 
     acertantes = []
 
-    for user_id, respuesta in partida["respuestas"].items():
-        if respuesta == correcta:
+    for user_id, respuesta_texto in partida["respuestas"].items():
+        if respuesta_texto == correcta_texto:
             partida["puntos"][user_id] = partida["puntos"].get(user_id, 0) + 1
             acertantes.append(partida["jugadores"].get(user_id, "Alguien"))
 
     texto = (
-        f"✅ Respuesta correcta: {correcta}) "
-        f"{pregunta['opciones']['ABCD'.index(correcta)]}\n\n"
+        f"✅ Respuesta correcta: {letra_correcta}) {correcta_texto}\n\n"
     )
+
+    explicacion = pregunta.get("explicacion")
+    if explicacion:
+        texto += f"📖 {explicacion}\n\n"
 
     if acertantes:
         texto += "🎯 Han acertado:\n"
@@ -307,7 +370,7 @@ async def botones_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if accion == "trivia_respuesta":
-        respuesta = datos[1]
+        respuesta_letra = datos[1]
         chat_id = int(datos[2])
         ronda = int(datos[3])
 
@@ -335,9 +398,11 @@ async def botones_trivial(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.answer("Ya has respondido esta pregunta.", show_alert=True)
             return
 
-        partida["respuestas"][user_id] = respuesta
+        respuesta_texto = partida["opciones_actuales"].get(respuesta_letra)
 
-        await query.answer(f"Respuesta registrada: {respuesta}", show_alert=True)
+        partida["respuestas"][user_id] = respuesta_texto
+
+        await query.answer(f"Respuesta registrada: {respuesta_letra}", show_alert=True)
 
         if len(partida["respuestas"]) >= len(partida["jugadores"]):
             await cerrar_pregunta_trivial(context, chat_id)
