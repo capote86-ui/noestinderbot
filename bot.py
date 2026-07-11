@@ -910,7 +910,8 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if mensaje == "!rankingtrivial" or mensaje == "/rankingtrivial":
         await mostrar_ranking_trivial(update)
         return
-       saludos_automaticos = [
+        
+    saludos_automaticos = [
         "hola",
         "hola buenas",
         "buenos dias",
@@ -1087,7 +1088,7 @@ mensajes_silencio = [
     "🎭 Este grupo tiene más extras que actores ahora mismo.",
     "👻 Si estáis aquí, haced una señal. Un parpadeo sirve."
 ]
-MINUTOS_SILENCIO = 180
+MINUTOS_SILENCIO = 360
 historial_chats = defaultdict(lambda: deque(maxlen=120))
 
 RAQUEL_ID = 1176046170
