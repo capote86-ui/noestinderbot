@@ -910,18 +910,30 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if mensaje == "!rankingtrivial" or mensaje == "/rankingtrivial":
         await mostrar_ranking_trivial(update)
         return
-    for trigger in respuestas:
-        if trigger in mensaje:
-            respuesta = random.choice(respuestas[trigger])
-            await update.message.reply_text(respuesta)
-            return
-        
-    for trigger in respuestas:
-        if trigger in mensaje:
-            respuesta = random.choice(respuestas[trigger])
-            await update.message.reply_text(respuesta)
-            return
+       saludos_automaticos = [
+        "hola",
+        "hola buenas",
+        "buenos dias",
+        "buenas tardes",
+        "buenas noches"
+    ]
 
+    for trigger in respuestas:
+        if trigger in mensaje:
+
+            # Los saludos se responden solo 1 de cada 10 veces.
+            if trigger in saludos_automaticos:
+                if random.randint(1, 10) != 1:
+                    return
+
+            # El resto de respuestas automáticas salen solo 1 de cada 15 veces.
+            else:
+                if random.randint(1, 15) != 1:
+                    return
+
+            respuesta = random.choice(respuestas[trigger])
+            await update.message.reply_text(respuesta)
+            return
     if random.randint(1, 300) == 1:
         await update.message.reply_text(random.choice(preguntas_random))
 
