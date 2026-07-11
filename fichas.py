@@ -4,7 +4,8 @@ from datetime import datetime
 from telegram import Update
 
 
-ARCHIVO_FICHAS = "fichas.json"
+CARPETA_DATOS = "/data" if os.path.isdir("/data") else "."
+ARCHIVO_FICHAS = os.path.join(CARPETA_DATOS, "fichas.json")
 
 
 def cargar_fichas():
@@ -18,33 +19,34 @@ def cargar_fichas():
         return {}
 
 
-def guardar_fichas(fichas):
-    archivo_temporal = f"{ARCHIVO_FICHAS}.tmp"
-
-    with open(archivo_temporal, "w", encoding="utf-8") as archivo:
-        json.dump(fichas, archivo, ensure_ascii=False, indent=2)
-
-    os.replace(archivo_temporal, ARCHIVO_FICHAS)
+def guardar_fichas():
+    with open(ARCHIVO_FICHAS, "w", encoding="utf-8") as archivo:
+        json.dump(
+            fichas_usuarios,
+            archivo,
+            ensure_ascii=False,
+            indent=2
+        )
 
 
 fichas_usuarios = cargar_fichas()
 
 
-def nivel_participacion(total_mensajes):
-    if total_mensajes >= 500:
+def nivel_participacion(total):
+    if total >= 500:
         return "🔥 Leyenda del grupo"
-    if total_mensajes >= 250:
+    if total >= 250:
         return "🗣️ Muy activo/a"
-    if total_mensajes >= 100:
+    if total >= 100:
         return "💬 Activo/a"
-    if total_mensajes >= 30:
+    if total >= 30:
         return "🙂 Participación habitual"
-    if total_mensajes >= 10:
+    if total >= 10:
         return "👀 Participación ocasional"
     return "🫥 Modo observador"
 
 
-def tiempo_desde(fecha):
+def formatear_ultima_actividad(fecha):
     if not fecha:
         return "Sin actividad registrada"
 
@@ -57,6 +59,7 @@ def tiempo_desde(fecha):
         return f"Hace {minutos} minuto(s)"
 
     horas = minutos // 60
+
     if horas < 24:
         return f"Hace {horas} hora(s)"
 
@@ -64,41 +67,74 @@ def tiempo_desde(fecha):
     return f"Hace {dias} día(s)"
 
 
-def construir_ficha(user_id, contador_mensajes, ultimo_mensaje_usuario):
+def construir_ficha(
+    user_id,
+    contador_mensajes,
+    ultimo_mensaje_usuario
+):
     ficha = fichas_usuarios.get(str(user_id))
 
     if not ficha:
         return None
 
-    total = contador_mensajes.get(user_id, 0)
+    total_mensajes = contador_mensajes.get(user_id, 0)
     ultima_actividad = ultimo_mensaje_usuario.get(user_id)
 
     usuario = ficha.get("usuario")
-    texto_usuario = f"@{usuario}" if usuario else "Sin nombre de usuario"
+    usuario_texto = f"@{usuario}" if usuario else "Sin usuario público"
+
+    edad = ficha.get("edad") or "No indicada"
+    ciudad = ficha.get("ciudad") or "No indicada"
+    pais = ficha.get("pais") or "No indicado"
+    cumpleanos = ficha.get("cumpleanos") or "No indicado"
+
+    if edad != "No indicada":
+        edad = f"{edad} años"
 
     return (
         f"📋 FICHA DE {ficha['nombre'].upper()}\n\n"
-        f"👤 Usuario: {texto_usuario}\n"
-        f"🎂 Edad: {ficha['edad']} años\n"
-        f"📍 Ciudad: {ficha['ciudad']}\n"
-        f"🌍 País: {ficha['pais']}\n"
-        f"🎉 Cumpleaños: {ficha['cumpleanos']}\n\n"
-        f"📊 Participación: {nivel_participacion(total)}\n"
-        f"💬 Mensajes registrados: {total}\n"
-        f"🕒 Última actividad: {tiempo_desde(ultima_actividad)}"
+        f"👤 Usuario: {usuario_texto}\n"
+        f"🎂 Edad: {edad}\n"
+        f"📍 Ciudad: {ciudad}\n"
+        f"🌍 País: {pais}\n"
+        f"🎉 Cumpleaños: {cumpleanos}\n\n"
+        f"📊 Participación: {nivel_participacion(total_mensajes)}\n"
+        f"💬 Mensajes registrados: {total_mensajes}\n"
+        f"🕒 Última actividad: "
+        f"{formatear_ultima_actividad(ultima_actividad)}"
     )
 
 
-async def registrar_ficha(update: Update):
+async def guardar_ficha_admin(
+    update: Update,
+    admin_ids
+):
+    if update.effective_user.id not in admin_ids:
+        await update.message.reply_text(
+            "🚫 Solo los administradores pueden crear o editar fichas."
+        )
+        return
+
+    if not update.message.reply_to_message:
+        await update.message.reply_text(
+            "📋 Para crear una ficha, responde a un mensaje de esa persona "
+            "con:\n\n"
+            "/guardarficha Nombre | Edad | Ciudad | País | DD/MM\n\n"
+            "Ejemplo:\n"
+            "/guardarficha Raquel | 39 | Santa Cruz de Tenerife | "
+            "España | 21/11\n\n"
+            "Si no conoces un dato, escribe un guion: -"
+        )
+        return
+
     texto_original = update.message.text.strip()
     partes_comando = texto_original.split(maxsplit=1)
 
     if len(partes_comando) < 2:
         await update.message.reply_text(
-            "📋 Para crear o actualizar tu ficha escribe:\n\n"
-            "/ficharme Nombre | Edad | Ciudad | País | DD/MM\n\n"
-            "Ejemplo:\n"
-            "/ficharme Raquel | 39 | Santa Cruz de Tenerife | España | 21/11"
+            "❌ Faltan los datos.\n\n"
+            "Formato:\n"
+            "/guardarficha Nombre | Edad | Ciudad | País | DD/MM"
         )
         return
 
@@ -106,83 +142,67 @@ async def registrar_ficha(update: Update):
 
     if len(datos) != 5:
         await update.message.reply_text(
-            "❌ El formato no es correcto.\n\n"
-            "Utiliza exactamente:\n"
-            "/ficharme Nombre | Edad | Ciudad | País | DD/MM"
+            "❌ Debes separar exactamente cinco datos con barras verticales:\n\n"
+            "Nombre | Edad | Ciudad | País | DD/MM"
         )
         return
 
     nombre, edad_texto, ciudad, pais, cumpleanos = datos
 
-    if not nombre or not ciudad or not pais:
+    if not nombre or nombre == "-":
         await update.message.reply_text(
-            "❌ Nombre, ciudad y país no pueden estar vacíos."
+            "❌ El nombre es obligatorio."
         )
         return
 
-    try:
-        edad = int(edad_texto)
-    except ValueError:
-        await update.message.reply_text(
-            "❌ La edad debe escribirse con números."
-        )
-        return
+    if edad_texto == "-":
+        edad = None
+    else:
+        try:
+            edad = int(edad_texto)
+        except ValueError:
+            await update.message.reply_text(
+                "❌ La edad debe ser un número o un guion."
+            )
+            return
 
-    if edad < 18 or edad > 99:
-        await update.message.reply_text(
-            "❌ La edad debe estar entre 18 y 99 años."
-        )
-        return
+        if edad < 18 or edad > 99:
+            await update.message.reply_text(
+                "❌ La edad debe estar entre 18 y 99 años."
+            )
+            return
 
-    try:
-        datetime.strptime(cumpleanos, "%d/%m")
-    except ValueError:
-        await update.message.reply_text(
-            "❌ El cumpleaños debe tener formato DD/MM.\n"
-            "Ejemplo: 21/11"
-        )
-        return
+    if cumpleanos == "-":
+        cumpleanos = None
+    else:
+        try:
+            datetime.strptime(cumpleanos, "%d/%m")
+        except ValueError:
+            await update.message.reply_text(
+                "❌ El cumpleaños debe escribirse como DD/MM o con un guion."
+            )
+            return
 
-    usuario = update.effective_user.username
+    usuario_objetivo = update.message.reply_to_message.from_user
+    user_id = usuario_objetivo.id
 
-    fichas_usuarios[str(update.effective_user.id)] = {
+    fichas_usuarios[str(user_id)] = {
         "nombre": nombre,
         "edad": edad,
-        "ciudad": ciudad,
-        "pais": pais,
+        "ciudad": None if ciudad == "-" else ciudad,
+        "pais": None if pais == "-" else pais,
         "cumpleanos": cumpleanos,
-        "usuario": usuario,
-        "fecha_registro": datetime.now().isoformat()
+        "usuario": usuario_objetivo.username,
+        "telegram_nombre": usuario_objetivo.first_name,
+        "actualizada_por": update.effective_user.id,
+        "fecha_actualizacion": datetime.now().isoformat()
     }
 
-    guardar_fichas(fichas_usuarios)
+    guardar_fichas()
 
     await update.message.reply_text(
-        f"✅ Ficha guardada correctamente, {nombre}.\n\n"
-        "Ya pueden consultarla con /ficha."
+        f"✅ Ficha de {nombre} guardada correctamente."
     )
-
-
-async def mostrar_mi_ficha(
-    update: Update,
-    contador_mensajes,
-    ultimo_mensaje_usuario
-):
-    texto = construir_ficha(
-        update.effective_user.id,
-        contador_mensajes,
-        ultimo_mensaje_usuario
-    )
-
-    if not texto:
-        await update.message.reply_text(
-            "Todavía no tienes ficha.\n\n"
-            "Créala con:\n"
-            "/ficharme Nombre | Edad | Ciudad | País | DD/MM"
-        )
-        return
-
-    await update.message.reply_text(texto)
 
 
 async def mostrar_ficha(
@@ -190,111 +210,79 @@ async def mostrar_ficha(
     contador_mensajes,
     ultimo_mensaje_usuario
 ):
-    texto_original = update.message.text.strip()
-    partes = texto_original.split(maxsplit=1)
-
-    user_id_buscado = None
-
     if update.message.reply_to_message:
-        user_id_buscado = update.message.reply_to_message.from_user.id
-
-    elif len(partes) >= 2:
-        busqueda = partes[1].strip().lower().lstrip("@")
-
-        for user_id, ficha in fichas_usuarios.items():
-            usuario = (ficha.get("usuario") or "").lower()
-            nombre = ficha.get("nombre", "").lower()
-
-            if busqueda == usuario or busqueda == nombre:
-                user_id_buscado = int(user_id)
-                break
+        user_id = update.message.reply_to_message.from_user.id
 
     else:
-        user_id_buscado = update.effective_user.id
+        texto_original = update.message.text.strip()
+        partes = texto_original.split(maxsplit=1)
 
-    if not user_id_buscado:
-        await update.message.reply_text(
-            "No encuentro esa ficha.\n\n"
-            "Puedes escribir:\n"
-            "/ficha @usuario\n\n"
-            "O responder a un mensaje con /ficha."
-        )
-        return
+        if len(partes) == 1:
+            user_id = update.effective_user.id
+
+        else:
+            busqueda = partes[1].strip().lower().lstrip("@")
+            user_id = None
+
+            for ficha_id, ficha in fichas_usuarios.items():
+                usuario = (ficha.get("usuario") or "").lower()
+                nombre = (ficha.get("nombre") or "").lower()
+
+                if busqueda == usuario or busqueda == nombre:
+                    user_id = int(ficha_id)
+                    break
+
+            if user_id is None:
+                await update.message.reply_text(
+                    "No encuentro esa ficha.\n\n"
+                    "También puedes responder al mensaje de la persona con /ficha."
+                )
+                return
 
     texto = construir_ficha(
-        user_id_buscado,
+        user_id,
         contador_mensajes,
         ultimo_mensaje_usuario
     )
 
     if not texto:
         await update.message.reply_text(
-            "Esa persona todavía no ha creado su ficha."
+            "Esa persona todavía no tiene una ficha registrada."
         )
         return
 
     await update.message.reply_text(texto)
 
 
-async def borrar_mi_ficha(update: Update):
-    user_id = str(update.effective_user.id)
-
-    if user_id not in fichas_usuarios:
-        await update.message.reply_text(
-            "No tienes ninguna ficha guardada."
-        )
-        return
-
-    fichas_usuarios.pop(user_id)
-    guardar_fichas(fichas_usuarios)
-
-    await update.message.reply_text(
-        "🗑️ Tu ficha ha sido eliminada."
-    )
-
-
-async def borrar_ficha_admin(update: Update, admin_ids):
+async def borrar_ficha_admin(
+    update: Update,
+    admin_ids
+):
     if update.effective_user.id not in admin_ids:
         await update.message.reply_text(
-            "🚫 Solo los administradores pueden borrar fichas ajenas."
+            "🚫 Solo los administradores pueden borrar fichas."
         )
         return
 
-    texto_original = update.message.text.strip()
-    partes = texto_original.split(maxsplit=1)
-
-    user_id_buscado = None
-
-    if update.message.reply_to_message:
-        user_id_buscado = update.message.reply_to_message.from_user.id
-
-    elif len(partes) >= 2:
-        busqueda = partes[1].strip().lower().lstrip("@")
-
-        for user_id, ficha in fichas_usuarios.items():
-            usuario = (ficha.get("usuario") or "").lower()
-            nombre = ficha.get("nombre", "").lower()
-
-            if busqueda == usuario or busqueda == nombre:
-                user_id_buscado = int(user_id)
-                break
-
-    if not user_id_buscado:
+    if not update.message.reply_to_message:
         await update.message.reply_text(
-            "No encuentro esa ficha.\n\n"
-            "Usa /borrarficha @usuario o responde a un mensaje."
+            "Responde al mensaje de la persona con /borrarficha."
         )
         return
 
-    if str(user_id_buscado) not in fichas_usuarios:
+    user_id = update.message.reply_to_message.from_user.id
+
+    if str(user_id) not in fichas_usuarios:
         await update.message.reply_text(
-            "Esa persona no tiene ficha guardada."
+            "Esa persona no tiene una ficha guardada."
         )
         return
 
-    fichas_usuarios.pop(str(user_id_buscado))
-    guardar_fichas(fichas_usuarios)
+    nombre = fichas_usuarios[str(user_id)].get("nombre", "esa persona")
+
+    fichas_usuarios.pop(str(user_id))
+    guardar_fichas()
 
     await update.message.reply_text(
-        "🗑️ Ficha eliminada por administración."
+        f"🗑️ Ficha de {nombre} eliminada."
     )
