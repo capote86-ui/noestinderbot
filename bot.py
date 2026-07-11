@@ -933,7 +933,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-        if (
+    if (
         mensaje == "/ficha"
         or mensaje == "!ficha"
         or mensaje.startswith("/ficha ")
