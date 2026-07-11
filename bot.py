@@ -416,6 +416,21 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje = update.message.text.lower().strip()
 
     chat_id = update.effective_chat.id
+    
+    if mensaje.startswith("/") or mensaje.startswith("!"):
+        comando = mensaje.split()[0]
+        comando = comando.lstrip("/!").split("@")[0]
+
+        if comando in COMANDOS_SOLO_ADMINS:
+            admins = await context.bot.get_chat_administrators(chat_id)
+            admin_ids = [admin.user.id for admin in admins]
+
+            if update.effective_user.id not in admin_ids:
+                await update.message.reply_text(
+                    "🚫 Este comando solo pueden utilizarlo los administradores."
+                )
+                return
+    
     ultima_actividad[chat_id] = datetime.now()
     usuario = update.effective_user.first_name or "Alguien"
     historial_chats[chat_id].append((usuario, mensaje))
@@ -1001,6 +1016,27 @@ mensajes_silencio = [
 ]
 MINUTOS_SILENCIO = 360
 historial_chats = defaultdict(lambda: deque(maxlen=120))
+
+COMANDOS_SOLO_ADMINS = {
+    "quienhabla",
+    "ranking",
+    "fantasmas",
+    "analiza",
+    "normas",
+    "sinpresentar",
+    "vigilar",
+    "recordatorio",
+    "limpieza",
+    "foto",
+    "quienesmas",
+    "cerrarquienes",
+    "miid",
+    "trivial",
+    "cancelartrivial",
+    "rankingtrivial",
+    "corte",
+    "burla"
+}
 
 RAQUEL_ID = 1176046170
 contador_mensajes = {}
