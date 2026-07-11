@@ -9,6 +9,7 @@ from openai import OpenAI
 import os
 
 from trivial import iniciar_trivial, cancelar_trivial, mostrar_ranking_trivial, botones_trivial
+from fichas import registrar_ficha, mostrar_mi_ficha, mostrar_ficha, borrar_mi_ficha, borrar_ficha_admin
 
 TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN CARGADO:", bool(TOKEN))
@@ -925,7 +926,38 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if mensaje == "!rankingtrivial" or mensaje == "/rankingtrivial":
         await mostrar_ranking_trivial(update)
         return
-        
+
+    if mensaje.startswith("/ficharme") or mensaje.startswith("!ficharme"):
+        await registrar_ficha(update)
+        return
+
+    if mensaje == "/mificha" or mensaje == "!mificha":
+        await mostrar_mi_ficha(
+            update,
+            contador_mensajes,
+            ultimo_mensaje_usuario
+        )
+        return
+
+    if mensaje.startswith("/ficha") or mensaje.startswith("!ficha"):
+        await mostrar_ficha(
+            update,
+            contador_mensajes,
+            ultimo_mensaje_usuario
+        )
+        return
+
+    if mensaje == "/borrarmificha" or mensaje == "!borrarmificha":
+        await borrar_mi_ficha(update)
+        return
+
+    if mensaje.startswith("/borrarficha") or mensaje.startswith("!borrarficha"):
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await borrar_ficha_admin(update, admin_ids)
+        return
+    
     saludos_automaticos = [
         "hola",
         "hola buenas",
@@ -1035,6 +1067,7 @@ COMANDOS_SOLO_ADMINS = {
     "cancelartrivial",
     "rankingtrivial",
     "corte",
+    "borrarficha",
     "burla"
 }
 
