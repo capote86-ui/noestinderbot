@@ -10,6 +10,13 @@ import os
 
 from trivial import iniciar_trivial, cancelar_trivial, mostrar_ranking_trivial, botones_trivial
 from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
+from cumpleanos import (
+    activar_cumpleanos,
+    desactivar_cumpleanos,
+    mostrar_proximos_cumpleanos,
+    mostrar_cumpleanos_mes,
+    revisar_cumpleanos
+)
 
 TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN CARGADO:", bool(TOKEN))
@@ -952,7 +959,28 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await borrar_ficha_admin(update, admin_ids)
         return
 
-    
+        if mensaje == "/activarcumples" or mensaje == "!activarcumples":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await activar_cumpleanos(update, admin_ids)
+        return
+
+    if mensaje == "/desactivarcumples" or mensaje == "!desactivarcumples":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await desactivar_cumpleanos(update, admin_ids)
+        return
+
+    if mensaje == "/cumples" or mensaje == "!cumples":
+        await mostrar_proximos_cumpleanos(update)
+        return
+
+    if mensaje == "/cumplesmes" or mensaje == "!cumplesmes":
+        await mostrar_cumpleanos_mes(update)
+        return
+        
     saludos_automaticos = [
         "hola",
         "hola buenas",
@@ -1064,6 +1092,8 @@ COMANDOS_SOLO_ADMINS = {
     "corte",
     "guardarficha",
     "borrarficha",
+    "activarcumples",
+    "desactivarcumples",
     "burla"
 }
 
