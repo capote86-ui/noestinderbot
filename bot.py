@@ -9,7 +9,7 @@ from openai import OpenAI
 import os
 
 from trivial import iniciar_trivial, cancelar_trivial, mostrar_ranking_trivial, botones_trivial
-from fichas import registrar_ficha, mostrar_mi_ficha, mostrar_ficha, borrar_mi_ficha, borrar_ficha_admin
+from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
 
 TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN CARGADO:", bool(TOKEN))
