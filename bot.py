@@ -936,21 +936,6 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(respuesta)
             return
 
-    if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
-        await update.message.reply_text(random.choice(preguntas))
-
-    if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
-        await update.message.reply_text(random.choice(preguntas))
-        return
-
-    if mensaje.startswith("!batalla") or mensaje.startswith("/batalla"):
-        await update.message.reply_text(random.choice(batallas))
-        return
-
-    if mensaje.startswith("!confesion") or mensaje.startswith("/confesion"):
-        await update.message.reply_text(random.choice(confesiones))
-        return
-
     if mensaje in ["!corte", "/corte"]:
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
@@ -989,80 +974,6 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"🫵 {burla} 😭")
         return 
         
-    
-preguntas = [
-    "¿Qué red flag todo el mundo normaliza y tú no soportas? 🚩",
-    "¿Cuál ha sido tu peor primera impresión de alguien? 😭",
-    "¿Qué cosa te hace perder interés automáticamente? 💀",
-    "¿Cuál ha sido la excusa más absurda que te han dado? 👀",
-    "¿Qué opinión tienes que podría enfadar al grupo entero? 😭",
-    "¿Qué cosa haces tú que sabes que es red flag? 💀",
-    "¿Qué persona famosa sería insoportable como pareja? 👀",
-    "¿Qué es peor: ghostear o volver como si nada? 😭",
-    "¿Cuál ha sido tu conversación más incómoda? 💀",
-    "¿Qué manía ajena no soportas? 👀",
-    "¿Qué cosa te enamora aunque sea una tontería? 😭",
-    "¿Qué es más red flag: seguir a demasiada gente o no seguir a nadie? 💀",
-    "¿Qué fue lo más raro que te dijeron para ligar? 👀",
-    "¿Qué palabra te da cringe instantáneo? 😭",
-    "¿Qué serie o película te parece sobrevalorada? 💀",
-    "¿Qué cosa pequeña te arruina el día? 👀",
-    "¿Cuál es tu teoría más absurda sobre las relaciones? 😭",
-    "¿Qué edad mental crees que tiene realmente el grupo? 💀",
-    "¿Qué red social sacarías del planeta mañana mismo? 👀",
-    "¿Cuál es la indirecta más obvia que no captaste? 😭",
-    "¿Qué cosa haces cuando nadie te ve? 💀",
-    "¿Qué canción pondrías para resumir tu vida amorosa? 👀",
-    "¿Qué emoji usa demasiado la gente? 😭",
-    "¿Qué te parece atractivo aunque sea raro? 💀",
-    "¿Qué es peor: llegar tarde o cancelar planes? 👀",
-]
-
-batallas = [
-    "Debate serio: ¿ducharse por la mañana o por la noche? 🚿",
-    "¿Dormir con ruido o silencio absoluto? 😭",
-    "¿Pizza con piña sí o expulsión inmediata? 🍍",
-    "¿Audio largo o muro de texto? 💀",
-    "¿TikTok ha destruido la atención de todos? 👀",
-    "¿Responder rápido da necesidad o educación? 😭",
-    "¿Dormir con calcetines es comodidad o delito? 🧦",
-    "¿Ver series dobladas o subtituladas? 💀",
-    "¿Café frío o crimen internacional? ☕",
-    "¿La tortilla con cebolla o sin cebolla? 😭",
-    "¿Los memes dan más conversación que las personas? 💀",
-    "¿Llamar por teléfono debería prohibirse? 👀",
-    "¿Instagram es postureo o diario personal? 😭",
-    "¿Se puede ser amigo de un ex? 💀",
-    "¿El visto debería desaparecer? 👀",
-    "¿Es peor mentir o ocultar cosas? 😭",
-    "¿Compartir ubicación da seguridad o miedo? 💀",
-    "¿Las notas de voz deberían tener límite legal? 👀",
-    "¿Plan tranquilo en casa o salir de fiesta? 😭",
-    "¿La gente guapa lo tiene realmente más fácil? 💀",
-]
-
-confesiones = [
-     "Confiesa una red flag tuya 😭",
-    "¿Qué mentira absurda has dicho para quedar bien? 💀",
-    "¿Qué cosa te da vergüenza admitir que te gusta? 👀",
-    "¿Cuál ha sido tu evento canónico más lamentable? 😭",
-    "¿Qué hiciste una vez y todavía te despiertas recordándolo? 💀",
-    "¿Cuál ha sido tu peor ghosteo? 👀",
-    "¿Qué es lo más tóxico que has hecho? 😭",
-    "¿Cuál ha sido tu peor borrachera? 💀",
-    "¿Qué persona no deberías haber vuelto a hablar nunca? 👀",
-    "¿Qué fue lo más ridículo que hiciste por alguien? 😭",
-    "¿Qué secreto absurdo tuyo descubriría el FBI? 💀",
-    "¿Qué cosa infantil sigues haciendo? 👀",
-    "¿Cuál ha sido tu momento más NPC? 😭",
-    "¿Qué has stalkeado y jamás deberías haber visto? 💀",
-    "¿Cuál ha sido tu peor mensaje enviado por error? 👀",
-    "¿Qué opinión tuya ocultas para evitar peleas? 😭",
-    "¿Qué hábito raro tienes cuando estás solo? 💀",
-    "¿Cuál ha sido tu peor cita? 👀",
-    "¿Qué excusa has usado para escapar de alguien? 😭",
-    "¿Qué cosa haces y jamás admitirías en persona? 💀",
-]
 cortes = [
     "🚨 Alerta de intensidad innecesaria. Aquí se socializa, no se abre casting para OnlyFans.",
     "📸 Intercambio de fotos no solicitado detectado. Respira, hidrátate y compórtate como una persona funcional.",
