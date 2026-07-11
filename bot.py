@@ -934,8 +934,6 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             respuesta = random.choice(respuestas[trigger])
             await update.message.reply_text(respuesta)
             return
-    if random.randint(1, 300) == 1:
-        await update.message.reply_text(random.choice(preguntas_random))
 
     if mensaje.startswith("!pregunta") or mensaje.startswith("/pregunta"):
         await update.message.reply_text(random.choice(preguntas))
