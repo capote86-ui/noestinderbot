@@ -990,7 +990,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await mostrar_cumpleanos_mes(update)
         return
 
-        if mensaje == "/activartribunal" or mensaje == "!activartribunal":
+    if mensaje == "/activartribunal" or mensaje == "!activartribunal":
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
