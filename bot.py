@@ -4,6 +4,7 @@ from telegram.ext import ContextTypes
 import random
 
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 from collections import defaultdict, deque, Counter
 from openai import OpenAI
 import os
@@ -1129,5 +1130,18 @@ app.add_handler(MessageHandler(filters.TEXT, responder))
 app.add_handler(CallbackQueryHandler(botones_trivial))
 
 print("Bot funcionando 😭")
-app.job_queue.run_repeating(revisar_silencios, interval=600, first=600)
+
+app.job_queue.run_repeating(
+    revisar_silencios,
+    interval=600,
+    first=600
+)
+
+app.job_queue.run_daily(
+    revisar_cumpleanos,
+    time=datetime.strptime("09:00", "%H:%M")
+        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
+        .timetz()
+)
+
 app.run_polling()
