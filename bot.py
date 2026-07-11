@@ -960,7 +960,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await borrar_ficha_admin(update, admin_ids)
         return
 
-        if mensaje == "/activarcumples" or mensaje == "!activarcumples":
+    if mensaje == "/activarcumples" or mensaje == "!activarcumples":
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
