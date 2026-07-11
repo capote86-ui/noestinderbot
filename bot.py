@@ -518,12 +518,6 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(texto)
         return
-    if mensaje.startswith("!ficha") or mensaje.startswith("/ficha"):
-        partes = mensaje.split(maxsplit=1)
-
-        if len(partes) < 2:
-            await update.message.reply_text("Dime de quién quieres la ficha. Ejemplo: !ficha Pedro")
-            return
 
         buscado = partes[1].lower()
         encontrado = None
@@ -939,7 +933,12 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    if mensaje.startswith("/ficha") or mensaje.startswith("!ficha"):
+        if (
+        mensaje == "/ficha"
+        or mensaje == "!ficha"
+        or mensaje.startswith("/ficha ")
+        or mensaje.startswith("!ficha ")
+    ):
         await mostrar_ficha(
             update,
             contador_mensajes,
