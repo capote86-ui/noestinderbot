@@ -1203,5 +1203,10 @@ app.job_queue.run_daily(
         .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
         .timetz()
 )
-
+app.job_queue.run_daily(
+    publicar_tribunal,
+    time=datetime.strptime("20:30", "%H:%M")
+        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
+        .timetz()
+)
 app.run_polling()
