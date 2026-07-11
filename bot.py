@@ -9,6 +9,14 @@ from collections import defaultdict, deque, Counter
 from openai import OpenAI
 import os
 
+from tribunal import (
+    activar_tribunal,
+    desactivar_tribunal,
+    lanzar_tribunal_manual,
+    cancelar_tribunal,
+    botones_tribunal,
+    publicar_tribunal
+)
 from trivial import iniciar_trivial, cancelar_trivial, mostrar_ranking_trivial, botones_trivial
 from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
 from cumpleanos import (
@@ -981,7 +989,42 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if mensaje == "/cumplesmes" or mensaje == "!cumplesmes":
         await mostrar_cumpleanos_mes(update)
         return
-        
+
+        if mensaje == "/activartribunal" or mensaje == "!activartribunal":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await activar_tribunal(update, admin_ids)
+        return
+
+    if mensaje == "/desactivartribunal" or mensaje == "!desactivartribunal":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await desactivar_tribunal(update, admin_ids)
+        return
+
+    if mensaje == "/tribunal" or mensaje == "!tribunal":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await lanzar_tribunal_manual(
+            update,
+            context,
+            admin_ids
+        )
+        return
+
+    if mensaje == "/cancelartribunal" or mensaje == "!cancelartribunal":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await cancelar_tribunal(
+            update,
+            context,
+            admin_ids
+        )
+        return
     saludos_automaticos = [
         "hola",
         "hola buenas",
@@ -1095,6 +1138,10 @@ COMANDOS_SOLO_ADMINS = {
     "borrarficha",
     "activarcumples",
     "desactivarcumples",
+    "activartribunal",
+    "desactivartribunal",
+    "tribunal",
+    "cancelartribunal",
     "burla"
 }
 
@@ -1127,7 +1174,20 @@ async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
 app = Application.builder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.TEXT, responder))
-app.add_handler(CallbackQueryHandler(botones_trivial))
+
+app.add_handler(
+    CallbackQueryHandler(
+        botones_trivial,
+        pattern=r"^trivia_"
+    )
+)
+
+app.add_handler(
+    CallbackQueryHandler(
+        botones_tribunal,
+        pattern=r"^tribunal_"
+    )
+)
 
 print("Bot funcionando 😭")
 
