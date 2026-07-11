@@ -920,6 +920,38 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if mensaje == "!rankingtrivial" or mensaje == "/rankingtrivial":
         await mostrar_ranking_trivial(update)
         return
+    if (
+        mensaje.startswith("/guardarficha ")
+        or mensaje.startswith("!guardarficha ")
+        or mensaje == "/guardarficha"
+        or mensaje == "!guardarficha"
+    ):
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await guardar_ficha_admin(update, admin_ids)
+        return
+
+    if (
+        mensaje == "/ficha"
+        or mensaje == "!ficha"
+        or mensaje.startswith("/ficha ")
+        or mensaje.startswith("!ficha ")
+    ):
+        await mostrar_ficha(
+            update,
+            contador_mensajes,
+            ultimo_mensaje_usuario
+        )
+        return
+
+    if mensaje == "/borrarficha" or mensaje == "!borrarficha":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await borrar_ficha_admin(update, admin_ids)
+        return
+
     
     saludos_automaticos = [
         "hola",
@@ -1030,6 +1062,7 @@ COMANDOS_SOLO_ADMINS = {
     "cancelartrivial",
     "rankingtrivial",
     "corte",
+    "guardarficha",
     "borrarficha",
     "burla"
 }
