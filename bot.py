@@ -647,11 +647,11 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         texto_normas = (
             "📜 NORMAS DEL GRUPO\n\n"
 
-            "1️⃣ Presentarte para entrar.\n"
-            "Nombre, edad y de dónde eres.\n\n"
+            "1️⃣ Preséntate para entrar.\n"
+            "Indica tu nombre o apodo, edad y de dónde eres. Además, envía un audio breve (5-15 segundos) saludando al grupo para que podamos ponerte voz. 😊\n\n"
 
             "2️⃣ Es obligatorio tener foto de perfil.\n"
-            "Las cuentas sin foto podrán ser expulsadas por seguridad y confianza del grupo.\n\n"
+            "No tiene que ser una foto tuya; puede ser cualquier imagen. Las cuentas sin foto podrán ser expulsadas por seguridad y confianza del grupo.\n\n"
 
             "3️⃣ Respeto ante todo.\n"
             "Nada de insultos, faltas de respeto, acoso ni comportamientos que generen mal ambiente.\n\n"
@@ -668,7 +668,8 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             "6️⃣ Si alguien te molesta o incumple las normas, avisa a un moderador o administrador.\n\n"
 
-            "7️⃣ Aquí venimos a charlar, reírnos y mantener un buen ambiente.\n\n"
+            "7️⃣ Participa.\n"
+            "Este no es un grupo para quedarse de espectador. Cuanto más participes, mejor será la experiencia para todos.\n\n"
 
             "8️⃣ El incumplimiento de las normas puede suponer la expulsión inmediata."
             
