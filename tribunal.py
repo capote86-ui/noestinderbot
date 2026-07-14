@@ -11,15 +11,14 @@ from casos_tribunal import casos_tribunal
 CARPETA_DATOS = "/data" if os.path.isdir("/data") else "."
 ARCHIVO_TRIBUNAL = os.path.join(CARPETA_DATOS, "tribunal.json")
 
-tribunales_activos = {}
-
 
 def cargar_datos():
     if not os.path.exists(ARCHIVO_TRIBUNAL):
         return {
             "chat_ids": [],
             "contador": 0,
-            "casos_recientes": []
+            "casos_recientes": [],
+            "activos": {}
         }
 
     try:
@@ -29,12 +28,13 @@ def cargar_datos():
         return {
             "chat_ids": [],
             "contador": 0,
-            "casos_recientes": []
+            "casos_recientes": [],
+            "activos": {}
         }
 
 
 datos_tribunal = cargar_datos()
-
+tribunales_activos = datos_tribunal.setdefault("activos", {})
 
 def guardar_datos():
     with open(ARCHIVO_TRIBUNAL, "w", encoding="utf-8") as archivo:
@@ -127,7 +127,9 @@ async def iniciar_tribunal_en_chat(
     context: ContextTypes.DEFAULT_TYPE,
     chat_id: int
 ):
-    if chat_id in tribunales_activos:
+    clave_chat = str(chat_id)
+
+    if clave_chat in tribunales_activos:
         return
 
     indice_caso, caso = elegir_caso()
@@ -173,12 +175,14 @@ async def iniciar_tribunal_en_chat(
         reply_markup=teclado
     )
 
-    tribunales_activos[chat_id] = {
+    tribunales_activos[clave_chat] = {
         "numero_caso": numero_caso,
         "indice_caso": indice_caso,
         "mensaje_id": mensaje.message_id,
         "votos": {}
     }
+
+guardar_datos()
 
     context.job_queue.run_once(
         cerrar_tribunal_por_tiempo,
@@ -216,7 +220,7 @@ async def lanzar_tribunal_manual(
 
     chat_id = update.effective_chat.id
 
-    if chat_id in tribunales_activos:
+    if str(chat_id) in tribunales_activos:
         await update.message.reply_text(
             "⚖️ Ya hay un caso del Tribunal abierto."
         )
@@ -245,7 +249,7 @@ async def botones_tribunal(
     chat_id = int(chat_id_texto)
     numero_caso = int(numero_texto)
 
-    tribunal = tribunales_activos.get(chat_id)
+    tribunal = tribunales_activos.get(str(chat_id))
 
     if not tribunal:
         await query.answer(
@@ -263,14 +267,15 @@ async def botones_tribunal(
 
     user_id = query.from_user.id
 
-    if user_id in tribunal["votos"]:
+    if str(user_id) in tribunal["votos"]:
         await query.answer(
             "Ya has votado en este caso.",
             show_alert=True
         )
         return
 
-    tribunal["votos"][user_id] = respuesta
+    tribunal["votos"][str(user_id)] = respuesta
+    guardar_datos()
 
     await query.answer(
         f"Voto registrado: opción {respuesta}",
@@ -296,7 +301,8 @@ async def cerrar_tribunal(
     chat_id: int,
     numero_caso: int
 ):
-    tribunal = tribunales_activos.get(chat_id)
+    clave_chat = str(chat_id)
+    tribunal = tribunales_activos.get(clave_chat)
 
     if not tribunal:
         return
@@ -350,7 +356,8 @@ async def cerrar_tribunal(
         text=texto
     )
 
-    tribunales_activos.pop(chat_id, None)
+    tribunales_activos.pop(clave_chat, None)
+    guardar_datos()
 
 
 async def cancelar_tribunal(
@@ -365,7 +372,8 @@ async def cancelar_tribunal(
         return
 
     chat_id = update.effective_chat.id
-    tribunal = tribunales_activos.get(chat_id)
+    clave_chat = str(chat_id)
+    tribunal = tribunales_activos.get(clave_chat)
 
     if not tribunal:
         await update.message.reply_text(
