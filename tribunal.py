@@ -182,7 +182,7 @@ async def iniciar_tribunal_en_chat(
         "votos": {}
     }
 
-guardar_datos()
+    guardar_datos()
 
     context.job_queue.run_once(
         cerrar_tribunal_por_tiempo,
