@@ -1026,6 +1026,17 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             admin_ids
         )
         return
+
+        if mensaje == "/nuevo" or mensaje == "!nuevo":
+        await update.message.reply_text(
+            "👋 ¡Bienvenido/a!\n\n"
+            "Antes de participar, completa estos 4 pasos:\n\n"
+            "📝 Preséntate indicando tu nombre o apodo, edad y de dónde eres.\n\n"
+            "🖼️ Pon una foto de perfil (no hace falta que sea tu cara, cualquier imagen sirve).\n\n"
+            "🎙️ Envía un audio breve (5-15 segundos) saludando al grupo.\n\n"
+            "🤝 ¡Y ya está! Ahora solo queda participar y disfrutar del grupo. 😊"
+        )
+        return
     saludos_automaticos = [
         "hola",
         "hola buenas",
@@ -1143,6 +1154,7 @@ COMANDOS_SOLO_ADMINS = {
     "desactivartribunal",
     "tribunal",
     "cancelartribunal",
+    "nuevo",
     "burla"
 }
 
