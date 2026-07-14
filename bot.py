@@ -1027,7 +1027,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-        if mensaje == "/nuevo" or mensaje == "!nuevo":
+    if mensaje == "/nuevo" or mensaje == "!nuevo":
         await update.message.reply_text(
             "👋 ¡Bienvenido/a!\n\n"
             "Antes de participar, completa estos 4 pasos:\n\n"
