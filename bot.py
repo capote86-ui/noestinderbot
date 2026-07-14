@@ -26,7 +26,17 @@ from cumpleanos import (
     mostrar_cumpleanos_mes,
     revisar_cumpleanos
 )
-
+from misa_domingo import (
+    activar_misa,
+    desactivar_misa,
+    lanzar_misa_manual,
+    cancelar_misa,
+    aviso_misa_sabado,
+    aviso_misa_30,
+    aviso_misa_15,
+    aviso_misa_5,
+    publicar_misa_automatica
+)
 TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN CARGADO:", bool(TOKEN))
 print("API:", os.getenv("OPENAI_API_KEY"))
@@ -1037,6 +1047,42 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "🤝 ¡Y ya está! Ahora solo queda participar y disfrutar del grupo. 😊"
         )
         return
+
+    if mensaje == "/activarmisa" or mensaje == "!activarmisa":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await activar_misa(update, admin_ids)
+        return
+
+    if mensaje == "/desactivarmisa" or mensaje == "!desactivarmisa":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await desactivar_misa(update, admin_ids)
+        return
+
+    if mensaje == "/misa" or mensaje == "!misa":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await lanzar_misa_manual(
+            update,
+            context,
+            admin_ids
+        )
+        return
+
+    if mensaje == "/cancelarmisa" or mensaje == "!cancelarmisa":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
+        await cancelar_misa(
+            update,
+            context,
+            admin_ids
+        )
+        return
     saludos_automaticos = [
         "hola",
         "hola buenas",
@@ -1155,6 +1201,10 @@ COMANDOS_SOLO_ADMINS = {
     "tribunal",
     "cancelartribunal",
     "nuevo",
+    "activarmisa",
+    "desactivarmisa",
+    "misa",
+    "cancelarmisa",
     "burla"
 }
 
@@ -1221,5 +1271,44 @@ app.job_queue.run_daily(
     time=datetime.strptime("20:30", "%H:%M")
         .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
         .timetz()
+)
+app.job_queue.run_daily(
+    aviso_misa_sabado,
+    time=datetime.strptime("21:00", "%H:%M")
+        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
+        .timetz(),
+    days=(5,)
+)
+
+app.job_queue.run_daily(
+    aviso_misa_30,
+    time=datetime.strptime("08:30", "%H:%M")
+        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
+        .timetz(),
+    days=(6,)
+)
+
+app.job_queue.run_daily(
+    aviso_misa_15,
+    time=datetime.strptime("08:45", "%H:%M")
+        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
+        .timetz(),
+    days=(6,)
+)
+
+app.job_queue.run_daily(
+    aviso_misa_5,
+    time=datetime.strptime("08:55", "%H:%M")
+        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
+        .timetz(),
+    days=(6,)
+)
+
+app.job_queue.run_daily(
+    publicar_misa_automatica,
+    time=datetime.strptime("09:00", "%H:%M")
+        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
+        .timetz(),
+    days=(6,)
 )
 app.run_polling()
