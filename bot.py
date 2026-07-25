@@ -31,10 +31,9 @@ from misa_domingo import (
     desactivar_misa,
     lanzar_misa_manual,
     cancelar_misa,
-    aviso_misa_sabado,
     aviso_misa_30,
-    aviso_misa_15,
-    aviso_misa_5,
+    aviso_misa_10,
+    aviso_misa_2,
     publicar_misa_automatica
 )
 TOKEN = os.getenv("BOT_TOKEN")
@@ -1273,42 +1272,34 @@ app.job_queue.run_daily(
         .timetz()
 )
 app.job_queue.run_daily(
-    aviso_misa_sabado,
-    time=datetime.strptime("21:00", "%H:%M")
-        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
-        .timetz(),
-    days=(5,)
-)
-
-app.job_queue.run_daily(
     aviso_misa_30,
-    time=datetime.strptime("08:30", "%H:%M")
+    time=datetime.strptime("11:00", "%H:%M")
         .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
         .timetz(),
-    days=(6,)
+    days=(0,)
 )
 
 app.job_queue.run_daily(
-    aviso_misa_15,
-    time=datetime.strptime("08:45", "%H:%M")
+    aviso_misa_10,
+    time=datetime.strptime("11:20", "%H:%M")
         .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
         .timetz(),
-    days=(6,)
+    days=(0,)
 )
 
 app.job_queue.run_daily(
-    aviso_misa_5,
-    time=datetime.strptime("08:55", "%H:%M")
+    aviso_misa_2,
+    time=datetime.strptime("11:28", "%H:%M")
         .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
         .timetz(),
-    days=(6,)
+    days=(0,)
 )
 
 app.job_queue.run_daily(
     publicar_misa_automatica,
-    time=datetime.strptime("09:00", "%H:%M")
+    time=datetime.strptime("11:30", "%H:%M")
         .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
         .timetz(),
-    days=(6,)
+    days=(0,)
 )
 app.run_polling()
