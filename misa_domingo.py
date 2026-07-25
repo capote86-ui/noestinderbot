@@ -7,10 +7,9 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from mensajes_misa import (
-    AVISOS_SABADO,
     AVISOS_30,
-    AVISOS_15,
-    AVISOS_5,
+    AVISOS_10,
+    AVISOS_2,
     APERTURAS,
     CONFESIONES,
     LECTURAS,
@@ -33,8 +32,15 @@ def cargar_configuracion():
 
     try:
         with open(ARCHIVO_MISA, "r", encoding="utf-8") as archivo:
-            return json.load(archivo)
-    except (json.JSONDecodeError, OSError):
+            datos = json.load(archivo)
+
+        if not isinstance(datos, dict):
+            return {"chat_ids": []}
+
+        datos.setdefault("chat_ids", [])
+        return datos
+
+    except (json.JSONDecodeError, OSError, TypeError):
         return {"chat_ids": []}
 
 
@@ -42,6 +48,8 @@ configuracion_misa = cargar_configuracion()
 
 
 def guardar_configuracion():
+    os.makedirs(CARPETA_DATOS, exist_ok=True)
+
     with open(ARCHIVO_MISA, "w", encoding="utf-8") as archivo:
         json.dump(
             configuracion_misa,
@@ -71,9 +79,12 @@ async def activar_misa(update: Update, admin_ids):
     guardar_configuracion()
 
     await update.message.reply_text(
-        "✅ Misa Dominical activada.\n\n"
-        "Habrá aviso el sábado y comenzará automáticamente "
-        "los domingos a las 09:00, hora canaria."
+        "✅ Misa Dominical v2 activada.\n\n"
+        "Se celebrará los domingos:\n"
+        "🕚 Primer aviso: 11:00, hora canaria.\n"
+        "⛪ Inicio: 11:30, hora canaria.\n"
+        "🏁 Final aproximado: 13:00, hora canaria.\n\n"
+        "En la Península será una hora más."
     )
 
 
@@ -112,20 +123,16 @@ async def enviar_a_grupos(context, lista_mensajes):
             print(f"No se pudo enviar mensaje de misa a {chat_id}: {error}")
 
 
-async def aviso_misa_sabado(context: ContextTypes.DEFAULT_TYPE):
-    await enviar_a_grupos(context, AVISOS_SABADO)
-
-
 async def aviso_misa_30(context: ContextTypes.DEFAULT_TYPE):
     await enviar_a_grupos(context, AVISOS_30)
 
 
-async def aviso_misa_15(context: ContextTypes.DEFAULT_TYPE):
-    await enviar_a_grupos(context, AVISOS_15)
+async def aviso_misa_10(context: ContextTypes.DEFAULT_TYPE):
+    await enviar_a_grupos(context, AVISOS_10)
 
 
-async def aviso_misa_5(context: ContextTypes.DEFAULT_TYPE):
-    await enviar_a_grupos(context, AVISOS_5)
+async def aviso_misa_2(context: ContextTypes.DEFAULT_TYPE):
+    await enviar_a_grupos(context, AVISOS_2)
 
 
 async def enviar_parte_misa(context: ContextTypes.DEFAULT_TYPE):
@@ -167,7 +174,10 @@ async def finalizar_misa(context: ContextTypes.DEFAULT_TYPE):
     misas_activas.pop(chat_id, None)
 
 
-async def iniciar_misa_en_chat(context: ContextTypes.DEFAULT_TYPE, chat_id: int):
+async def iniciar_misa_en_chat(
+    context: ContextTypes.DEFAULT_TYPE,
+    chat_id: int
+):
     if chat_id in misas_activas:
         return False
 
@@ -182,12 +192,20 @@ async def iniciar_misa_en_chat(context: ContextTypes.DEFAULT_TYPE, chat_id: int)
         text=random.choice(APERTURAS)
     )
 
+    # Tiempos contados desde el comienzo de la misa:
+    # 11:30 Apertura
+    # 11:40 Confesión
+    # 11:50 Lectura
+    # 12:05 Examen de conciencia
+    # 12:20 Penitencia
+    # 12:35 Canonización
+    # 13:00 Cierre
     partes = [
-        (600, CONFESIONES, "confesion"),
-        (1200, LECTURAS, "lectura"),
-        (1800, EXAMENES, "examen"),
-        (2400, PENITENCIAS, "penitencia"),
-        (3000, CANONIZACIONES, "canonizacion"),
+        (10 * 60, CONFESIONES, "confesion"),
+        (20 * 60, LECTURAS, "lectura"),
+        (35 * 60, EXAMENES, "examen"),
+        (50 * 60, PENITENCIAS, "penitencia"),
+        (65 * 60, CANONIZACIONES, "canonizacion"),
     ]
 
     for segundos, mensajes, nombre in partes:
@@ -204,7 +222,7 @@ async def iniciar_misa_en_chat(context: ContextTypes.DEFAULT_TYPE, chat_id: int)
 
     context.job_queue.run_once(
         finalizar_misa,
-        when=3600,
+        when=90 * 60,
         data={
             "chat_id": chat_id,
             "identificador": identificador
@@ -215,7 +233,9 @@ async def iniciar_misa_en_chat(context: ContextTypes.DEFAULT_TYPE, chat_id: int)
     return True
 
 
-async def publicar_misa_automatica(context: ContextTypes.DEFAULT_TYPE):
+async def publicar_misa_automatica(
+    context: ContextTypes.DEFAULT_TYPE
+):
     for chat_id in configuracion_misa.get("chat_ids", []):
         try:
             await iniciar_misa_en_chat(context, chat_id)
