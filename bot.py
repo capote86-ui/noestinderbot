@@ -1,6 +1,7 @@
 from telegram.ext import Application, MessageHandler, CallbackQueryHandler, filters
 from telegram import Update
 from telegram.ext import ContextTypes
+from telegram.ext import CallbackQueryHandler
 import random
 
 from datetime import datetime, timedelta
@@ -35,6 +36,14 @@ from misa_domingo import (
     aviso_misa_10,
     aviso_misa_2,
     publicar_misa_automatica
+)
+from tests import (
+    activar_tests,
+    desactivar_tests,
+    lanzar_test_manual,
+    publicar_test_automatico,
+    cancelar_test_admin,
+    botones_tests,
 )
 TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN CARGADO:", bool(TOKEN))
@@ -978,6 +987,33 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await borrar_ficha_admin(update, admin_ids)
         return
 
+    if texto == "/test":
+    await lanzar_test_manual(
+        update,
+        context,
+        admin_ids
+    )
+    return
+    if texto == "/activartests":
+    await activar_tests(
+        update,
+        admin_ids
+    )
+    return
+    if texto == "/desactivartests":
+    await desactivar_tests(
+        update,
+        admin_ids
+    )
+    return
+    if texto == "/cancelartest":
+    await cancelar_test_admin(
+        update,
+        context,
+        admin_ids
+    )
+    return
+
     if mensaje == "/activarcumples" or mensaje == "!activarcumples":
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
@@ -1301,5 +1337,18 @@ app.job_queue.run_daily(
         .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
         .timetz(),
     days=(0,)
+)
+app.add_handler(
+    CallbackQueryHandler(
+        botones_tests,
+        pattern=r"^test_"
+    )
+)
+app.job_queue.run_daily(
+    publicar_test_automatico,
+    time=datetime.strptime("20:00", "%H:%M")
+        .replace(tzinfo=ZoneInfo("Atlantic/Canary"))
+        .timetz(),
+    days=(3,)
 )
 app.run_polling()
