@@ -988,26 +988,26 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if texto == "/test":
-    await lanzar_test_manual(
+        await lanzar_test_manual(
         update,
         context,
         admin_ids
     )
     return
     if texto == "/activartests":
-    await activar_tests(
+        await activar_tests(
         update,
         admin_ids
     )
     return
     if texto == "/desactivartests":
-    await desactivar_tests(
+        await desactivar_tests(
         update,
         admin_ids
     )
     return
     if texto == "/cancelartest":
-    await cancelar_test_admin(
+        await cancelar_test_admin(
         update,
         context,
         admin_ids
