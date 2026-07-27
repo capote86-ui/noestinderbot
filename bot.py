@@ -10,6 +10,15 @@ from collections import defaultdict, deque, Counter
 from openai import OpenAI
 import os
 
+from tests import (
+    activar_tests,
+    desactivar_tests,
+    lanzar_test_manual,
+    publicar_test_automatico,
+    cancelar_test_admin,
+    botones_tests,
+)
+
 from tribunal import (
     activar_tribunal,
     desactivar_tribunal,
@@ -37,14 +46,7 @@ from misa_domingo import (
     aviso_misa_2,
     publicar_misa_automatica
 )
-from tests import (
-    activar_tests,
-    desactivar_tests,
-    lanzar_test_manual,
-    publicar_test_automatico,
-    cancelar_test_admin,
-    botones_tests,
-)
+
 TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN CARGADO:", bool(TOKEN))
 print("API:", os.getenv("OPENAI_API_KEY"))
