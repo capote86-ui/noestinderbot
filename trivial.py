@@ -1,7 +1,7 @@
-    import random
-    from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-    from telegram.ext import ContextTypes
-    from preguntas_trivial import preguntas_trivial
+import random
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import ContextTypes
+from preguntas_trivial import preguntas_trivial
     
     TIEMPO_PREGUNTA = 15
     PREGUNTAS_PARTIDA = 15
