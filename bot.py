@@ -1,7 +1,6 @@
 from telegram.ext import Application, MessageHandler, CallbackQueryHandler, filters
 from telegram import Update
 from telegram.ext import ContextTypes
-from telegram.ext import CallbackQueryHandler
 import random
 
 from datetime import datetime, timedelta
@@ -989,32 +988,47 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await borrar_ficha_admin(update, admin_ids)
         return
 
-    if texto == "/test":
+    if mensaje == "/test" or mensaje == "!test":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
         await lanzar_test_manual(
-        update,
-        context,
-        admin_ids
-    )
-    return
-    if texto == "/activartests":
+            update,
+            context,
+            admin_ids
+        )
+        return
+
+    if mensaje == "/activartests" or mensaje == "!activartests":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
         await activar_tests(
-        update,
-        admin_ids
-    )
-    return
-    if texto == "/desactivartests":
+            update,
+            admin_ids
+        )
+        return
+
+    if mensaje == "/desactivartests" or mensaje == "!desactivartests":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
         await desactivar_tests(
-        update,
-        admin_ids
-    )
-    return
-    if texto == "/cancelartest":
+            update,
+            admin_ids
+        )
+        return
+
+    if mensaje == "/cancelartest" or mensaje == "!cancelartest":
+        admins = await context.bot.get_chat_administrators(chat_id)
+        admin_ids = [admin.user.id for admin in admins]
+
         await cancelar_test_admin(
-        update,
-        context,
-        admin_ids
-    )
-    return
+            update,
+            context,
+            admin_ids
+        )
+        return
 
     if mensaje == "/activarcumples" or mensaje == "!activarcumples":
         admins = await context.bot.get_chat_administrators(chat_id)
@@ -1242,7 +1256,11 @@ COMANDOS_SOLO_ADMINS = {
     "desactivarmisa",
     "misa",
     "cancelarmisa",
-    "burla"
+    "burla",
+    "test",
+    "activartests",
+    "desactivartests",
+    "cancelartest"
 }
 
 RAQUEL_ID = 1176046170
