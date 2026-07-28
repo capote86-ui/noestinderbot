@@ -3,8 +3,8 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 from preguntas_trivial import preguntas_trivial
     
-    TIEMPO_PREGUNTA = 15
-    PREGUNTAS_PARTIDA = 15
+TIEMPO_PREGUNTA = 18
+PREGUNTAS_PARTIDA = 15
     
     trivials_activos = {}
     ranking_trivial = {}
