@@ -24,7 +24,8 @@ from tribunal import (
     lanzar_tribunal_manual,
     cancelar_tribunal,
     botones_tribunal,
-    publicar_tribunal
+    publicar_tribunal,
+    restaurar_tribunales_pendientes
 )
 from trivial import iniciar_trivial, cancelar_trivial, mostrar_ranking_trivial, botones_trivial
 from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
@@ -450,9 +451,10 @@ preguntas_quienesmas = [
 
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mensaje = update.message.text.lower().strip()
-
     chat_id = update.effective_chat.id
-    
+
+    comando = ""
+
     if mensaje.startswith("/") or mensaje.startswith("!"):
         comando = mensaje.split()[0]
         comando = comando.lstrip("/!").split("@")[0]
@@ -1052,21 +1054,27 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await mostrar_cumpleanos_mes(update)
         return
 
-    if mensaje == "/activartribunal" or mensaje == "!activartribunal":
+        if comando == "activartribunal":
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
-        await activar_tribunal(update, admin_ids)
+        await activar_tribunal(
+            update,
+            admin_ids
+        )
         return
 
-    if mensaje == "/desactivartribunal" or mensaje == "!desactivartribunal":
+    if comando == "desactivartribunal":
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
-        await desactivar_tribunal(update, admin_ids)
+        await desactivar_tribunal(
+            update,
+            admin_ids
+        )
         return
 
-    if mensaje == "/tribunal" or mensaje == "!tribunal":
+    if comando == "tribunal":
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
@@ -1077,7 +1085,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    if mensaje == "/cancelartribunal" or mensaje == "!cancelartribunal":
+    if comando == "cancelartribunal":
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
@@ -1289,7 +1297,12 @@ async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
                     text=f"{mensaje_silencio}\n\n{pregunta}"
                 )
                 ultimo_empujon[chat_id] = ahora
-app = Application.builder().token(TOKEN).build()
+app = (
+    Application.builder()
+    .token(TOKEN)
+    .post_init(restaurar_tribunales_pendientes)
+    .build()
+)
 
 app.add_handler(MessageHandler(filters.TEXT, responder))
 
