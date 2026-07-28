@@ -1054,7 +1054,7 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await mostrar_cumpleanos_mes(update)
         return
 
-        if comando == "activartribunal":
+    if comando == "activartribunal":
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
 
