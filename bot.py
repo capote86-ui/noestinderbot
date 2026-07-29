@@ -18,6 +18,14 @@ from tests import (
     botones_tests,
 )
 
+from impostor import (
+    iniciar_impostor,
+    cancelar_impostor,
+    mostrar_ranking_impostor,
+    botones_impostor,
+    procesar_mensaje_impostor,
+)
+
 from tribunal import (
     activar_tribunal,
     desactivar_tribunal,
@@ -468,7 +476,9 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     "🚫 Este comando solo pueden utilizarlo los administradores."
                 )
                 return
-    
+    if await procesar_mensaje_impostor(update, context):
+        return
+        
     ultima_actividad[chat_id] = datetime.now()
     usuario = update.effective_user.first_name or "Alguien"
     historial_chats[chat_id].append((usuario, mensaje))
@@ -1096,6 +1106,18 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
+    if comando == "impostor":
+        await iniciar_impostor(update, context, chat_id, admin_ids)
+        return
+
+    if comando == "cancelarimpostor":
+        await cancelar_impostor(update, context, chat_id, admin_ids)
+        return
+
+    if comando == "rankingimpostor":
+        await mostrar_ranking_impostor(update)
+        return
+
     if mensaje == "/nuevo" or mensaje == "!nuevo":
         await update.message.reply_text(
             "👋 ¡Bienvenido/a!\n\n"
@@ -1265,6 +1287,9 @@ COMANDOS_SOLO_ADMINS = {
     "misa",
     "cancelarmisa",
     "burla",
+    "impostor",
+    "cancelarimpostor",
+    "rankingimpostor",
     "test",
     "activartests",
     "desactivartests",
@@ -1317,6 +1342,13 @@ app.add_handler(
     CallbackQueryHandler(
         botones_tribunal,
         pattern=r"^tribunal_"
+    )
+)
+
+app.add_handler(
+    CallbackQueryHandler(
+        botones_impostor,
+        pattern=r"^imp_"
     )
 )
 
