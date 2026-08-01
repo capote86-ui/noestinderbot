@@ -3,7 +3,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 from preguntas_trivial import preguntas_trivial
 
-TIEMPO_PREGUNTA = 10
+TIEMPO_PREGUNTA = 17
 PREGUNTAS_PARTIDA = 15
 
 trivials_activos = {}
