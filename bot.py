@@ -849,29 +849,29 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
         if comando == "foto" or comando == "fotos":
-        texto = (
-            "📸 ¿TIENES FOTO PERO NOSOTROS NO LA VEMOS?\n\n"
-            "Lo más probable es que tengas tu foto de perfil visible solo para tus contactos. "
-            "Como nosotros no estamos en tus contactos, Telegram nos muestra el perfil sin foto. 👻\n\n"
-            "👉 OPCIÓN 1: hacer visible tu foto actual\n"
-            "Ve a:\n"
-            "⚙️ Ajustes → Privacidad y seguridad → Fotos de perfil\n\n"
-            "En quién puede ver tus fotos, selecciona «Todos».\n\n"
-            "👉 OPCIÓN 2: añadir una foto pública\n"
-            "Si prefieres mantener tus fotos personales solo para tus contactos, no pasa nada.\n"
-            "Ve a:\n"
-            "⚙️ Ajustes → Privacidad y seguridad → Fotos de perfil → Añadir foto pública\n\n"
-            "Esa será la imagen que verá la gente que no tenga acceso a tus fotos privadas. "
-            "Puede ser una mascota, un paisaje, un meme, un avatar… no tiene que ser tu cara. 😊\n\n"
-            "✅ Lo importante es que desde el grupo podamos ver alguna imagen en tu perfil."
-        )
+            texto = (
+                "📸 ¿TIENES FOTO PERO NOSOTROS NO LA VEMOS?\n\n"
+                "Lo más probable es que tengas tu foto de perfil visible solo para tus contactos. "
+                "Como nosotros no estamos en tus contactos, Telegram nos muestra el perfil sin foto. 👻\n\n"
+                "👉 OPCIÓN 1: hacer visible tu foto actual\n"
+                "Ve a:\n"
+                "⚙️ Ajustes → Privacidad y seguridad → Fotos de perfil\n\n"
+                "En quién puede ver tus fotos, selecciona «Todos».\n\n"
+                "👉 OPCIÓN 2: añadir una foto pública\n"
+                "Si prefieres mantener tus fotos personales solo para tus contactos, no pasa nada.\n"
+                "Ve a:\n"
+                "⚙️ Ajustes → Privacidad y seguridad → Fotos de perfil → Añadir foto pública\n\n"
+                "Esa será la imagen que verá la gente que no tenga acceso a tus fotos privadas. "
+                "Puede ser una mascota, un paisaje, un meme, un avatar… no tiene que ser tu cara. 😊\n\n"
+                "✅ Lo importante es que desde el grupo podamos ver alguna imagen en tu perfil."
+            )
 
-        if update.message.reply_to_message:
-            await update.message.reply_to_message.reply_text(texto)
-        else:
-            await update.message.reply_text(texto)
+            if update.message.reply_to_message:
+                await update.message.reply_to_message.reply_text(texto)
+            else:
+                await update.message.reply_text(texto)
 
-        return
+            return
     if mensaje.startswith("!quienesmas") or mensaje.startswith("/quienesmas"):
 
         if update.effective_user.id != RAQUEL_ID:
