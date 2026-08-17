@@ -848,7 +848,12 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(texto)
         return
 
-    if mensaje.startswith("!foto") or mensaje.startswith("/foto"):
+    if (
+    mensaje.startswith("!foto")
+    or mensaje.startswith("/foto")
+    or mensaje.startswith("!fotos")
+    or mensaje.startswith("/fotos")
+):
 
     texto = (
         "📸 ¿TIENES FOTO PERO NOSOTROS NO LA VEMOS?\n\n"
