@@ -36,6 +36,7 @@ from tribunal import (
     restaurar_tribunales_pendientes
 )
 from trivial import iniciar_trivial, cancelar_trivial, mostrar_ranking_trivial, botones_trivial
+from dadonet import dadonet
 from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
 from cumpleanos import (
     activar_cumpleanos,
@@ -964,6 +965,10 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
+    if comando == "dadonet":
+        await dadonet(update, context)
+        return
+        
     if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
