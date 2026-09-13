@@ -23,25 +23,36 @@ from mensajes_misa import (
 CARPETA_DATOS = "/data" if os.path.isdir("/data") else "."
 ARCHIVO_MISA = os.path.join(CARPETA_DATOS, "misa_domingo.json")
 
+# Grupo principal de No es Tinder. Siempre queda activado tras cualquier reinicio/deploy.
+GRUPO_PRINCIPAL_ID = -1003634987823
+
 misas_activas = {}
 
 
 def cargar_configuracion():
     if not os.path.exists(ARCHIVO_MISA):
-        return {"chat_ids": []}
+        return {"chat_ids": [GRUPO_PRINCIPAL_ID]}
 
     try:
         with open(ARCHIVO_MISA, "r", encoding="utf-8") as archivo:
             datos = json.load(archivo)
 
         if not isinstance(datos, dict):
-            return {"chat_ids": []}
+            return {"chat_ids": [GRUPO_PRINCIPAL_ID]}
 
         datos.setdefault("chat_ids", [])
+        if not isinstance(datos["chat_ids"], list):
+            datos["chat_ids"] = []
+
+        # Aunque Railway haya perdido misa_domingo.json, o el archivo venga sin el grupo,
+        # la Misa de No es Tinder se reactiva automáticamente al arrancar.
+        if GRUPO_PRINCIPAL_ID not in datos["chat_ids"]:
+            datos["chat_ids"].append(GRUPO_PRINCIPAL_ID)
+
         return datos
 
     except (json.JSONDecodeError, OSError, TypeError):
-        return {"chat_ids": []}
+        return {"chat_ids": [GRUPO_PRINCIPAL_ID]}
 
 
 configuracion_misa = cargar_configuracion()
@@ -97,6 +108,13 @@ async def desactivar_misa(update: Update, admin_ids):
 
     chat_id = update.effective_chat.id
     chat_ids = configuracion_misa.setdefault("chat_ids", [])
+
+    if chat_id == GRUPO_PRINCIPAL_ID:
+        await update.message.reply_text(
+            "🔒 La Misa Dominical automática está fijada permanentemente en No es Tinder. "
+            "Puedes cancelar una misa en marcha con /cancelarmisa, pero volverá a celebrarse el próximo domingo."
+        )
+        return
 
     if chat_id not in chat_ids:
         await update.message.reply_text(
