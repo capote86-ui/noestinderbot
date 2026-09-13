@@ -37,6 +37,7 @@ from tribunal import (
 )
 from trivial import iniciar_trivial, cancelar_trivial, mostrar_ranking_trivial, botones_trivial
 from dadonet import dadonet
+from quiendijo import quien_dijo, botones_quien_dijo, ranking_quien_dijo
 from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
 from cumpleanos import (
     activar_cumpleanos,
@@ -968,6 +969,14 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if comando == "dadonet":
         await dadonet(update, context)
         return
+
+    if comando == "quiendijo":
+        await quien_dijo(update, context)
+        return
+
+    if comando == "rankingquiendijo":
+        await ranking_quien_dijo(update, context)
+        return
         
     if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
         admins = await context.bot.get_chat_administrators(chat_id)
@@ -1367,6 +1376,14 @@ app.add_handler(
         pattern=r"^imp_"
     )
 )
+
+app.add_handler(
+    CallbackQueryHandler(
+        botones_quien_dijo,
+        pattern=r"^qd_"
+    )
+)
+
 
 print("Bot funcionando 😭")
 
