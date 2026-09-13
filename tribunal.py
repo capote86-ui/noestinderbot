@@ -13,13 +13,17 @@ from casos_tribunal import casos_tribunal
 
 CARPETA_DATOS = "/data" if os.path.isdir("/data") else "."
 ARCHIVO_TRIBUNAL = os.path.join(CARPETA_DATOS, "tribunal.json")
+
+# Grupo principal de No es Tinder. Siempre queda activado tras cualquier reinicio/deploy.
+GRUPO_PRINCIPAL_ID = -1003634987823
+
 DURACION_VOTACION_SEGUNDOS = 30 * 60
 LETRAS = ("A", "B", "C", "D")
 
 
 def datos_vacios() -> dict[str, Any]:
     return {
-        "chat_ids": [],
+        "chat_ids": [GRUPO_PRINCIPAL_ID],
         "contador": 0,
         "casos_recientes": [],
         "activos": {},
@@ -46,6 +50,11 @@ def cargar_datos() -> dict[str, Any]:
 
     if not isinstance(datos["chat_ids"], list):
         datos["chat_ids"] = []
+
+    # Aunque Railway haya perdido tribunal.json, o el archivo venga sin el grupo,
+    # el Tribunal de No es Tinder se reactiva automáticamente al arrancar.
+    if GRUPO_PRINCIPAL_ID not in datos["chat_ids"]:
+        datos["chat_ids"].append(GRUPO_PRINCIPAL_ID)
 
     if not isinstance(datos["casos_recientes"], list):
         datos["casos_recientes"] = []
@@ -204,6 +213,13 @@ async def desactivar_tribunal(update: Update, admin_ids) -> None:
 
     chat_id = update.effective_chat.id
     chat_ids = datos_tribunal.setdefault("chat_ids", [])
+
+    if chat_id == GRUPO_PRINCIPAL_ID:
+        await update.message.reply_text(
+            "🔒 El Tribunal automático está fijado permanentemente en No es Tinder. "
+            "Puedes cancelar un caso concreto con /cancelartribunal, pero el Tribunal diario seguirá activo."
+        )
+        return
 
     if chat_id not in chat_ids:
         await update.message.reply_text(
