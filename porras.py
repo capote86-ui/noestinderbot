@@ -126,6 +126,106 @@ def _nombre(user):
     return user.first_name or "Alguien"
 
 
+async def _procesar_partido(context, datos, item, permitir_publicar=True):
+    """Sincroniza un partido de football-data.org con el estado persistido."""
+    ahora = datetime.now(TZ)
+
+    fid = str(item.get("id"))
+    if not fid or fid == "None":
+        return False
+
+    try:
+        inicio = _parsear_fecha_utc(item["utcDate"])
+    except Exception:
+        return False
+
+    estado = item.get("status", "")
+    local = (item.get("homeTeam") or {}).get("name", "Local")
+    visitante = (item.get("awayTeam") or {}).get("name", "Visitante")
+    registro = datos["partidos"].get(fid)
+    cambiado = False
+
+    # Publica desde 36 horas antes hasta el comienzo.
+    if (
+        permitir_publicar
+        and registro is None
+        and timedelta(0) < (inicio - ahora) <= timedelta(hours=PUBLICAR_HORAS_ANTES)
+        and estado in ESTADOS_PROGRAMADOS
+    ):
+        try:
+            msg = await context.bot.send_message(
+                chat_id=GRUPO_PRINCIPAL_ID,
+                text=_texto_porra(local, visitante, inicio),
+            )
+
+            datos["partidos"][fid] = {
+                "match_id": int(fid),
+                "message_id": msg.message_id,
+                "chat_id": GRUPO_PRINCIPAL_ID,
+                "local": local,
+                "visitante": visitante,
+                "inicio": inicio.isoformat(),
+                "estado": "abierta",
+                "predicciones": {},
+                "resuelta": False,
+            }
+
+            cambiado = True
+            registro = datos["partidos"][fid]
+            print(f"PORRAS: publicada {local} - {visitante}")
+
+        except Exception as e:
+            print("PORRAS: error publicando porra:", e)
+            return cambiado
+
+    if not registro:
+        return cambiado
+
+    # Cierra cuando empieza o cuando la API deja de considerarlo programado.
+    if (
+        registro.get("estado") == "abierta"
+        and (ahora >= inicio or estado not in ESTADOS_PROGRAMADOS)
+    ):
+        registro["estado"] = "cerrada"
+        cambiado = True
+
+    # Resuelve cuando football-data.org lo marca como finalizado/adjudicado.
+    if estado in ESTADOS_FINAL and not registro.get("resuelta"):
+        score = item.get("score") or {}
+        full_time = score.get("fullTime") or {}
+        gh = full_time.get("home")
+        ga = full_time.get("away")
+
+        if gh is not None and ga is not None:
+            await _resolver(context, datos, registro, int(gh), int(ga))
+            registro["resuelta"] = True
+            registro["estado"] = "resuelta"
+            registro["resultado"] = f"{gh}-{ga}"
+            cambiado = True
+
+    # Anula si el partido se aplaza, cancela o suspende.
+    if (
+        estado in ESTADOS_CANCELADOS
+        and registro.get("estado") not in {"cancelada", "resuelta"}
+    ):
+        registro["estado"] = "cancelada"
+        cambiado = True
+
+        try:
+            await context.bot.send_message(
+                chat_id=registro["chat_id"],
+                reply_to_message_id=registro["message_id"],
+                text=(
+                    f"⚠️ La porra {local} - {visitante} queda anulada "
+                    f"porque el partido figura como {estado}."
+                ),
+            )
+        except Exception as e:
+            print("PORRAS: error avisando cancelación:", e)
+
+    return cambiado
+
+
 async def revisar_porras(context):
     """Publica próximas porras y resuelve las ya finalizadas."""
     ahora = datetime.now(TZ)
@@ -147,101 +247,66 @@ async def revisar_porras(context):
     cambiado = False
 
     for item in partidos:
-        fid = str(item.get("id"))
-        if not fid or fid == "None":
-            continue
-
-        try:
-            inicio = _parsear_fecha_utc(item["utcDate"])
-        except Exception:
-            continue
-
-        estado = item.get("status", "")
-        local = (item.get("homeTeam") or {}).get("name", "Local")
-        visitante = (item.get("awayTeam") or {}).get("name", "Visitante")
-        registro = datos["partidos"].get(fid)
-
-        # Publica desde 36 horas antes hasta el comienzo.
-        if (
-            registro is None
-            and timedelta(0) < (inicio - ahora) <= timedelta(hours=PUBLICAR_HORAS_ANTES)
-            and estado in ESTADOS_PROGRAMADOS
+        if await _procesar_partido(
+            context,
+            datos,
+            item,
+            permitir_publicar=True,
         ):
-            try:
-                msg = await context.bot.send_message(
-                    chat_id=GRUPO_PRINCIPAL_ID,
-                    text=_texto_porra(local, visitante, inicio),
-                )
-
-                datos["partidos"][fid] = {
-                    "match_id": int(fid),
-                    "message_id": msg.message_id,
-                    "chat_id": GRUPO_PRINCIPAL_ID,
-                    "local": local,
-                    "visitante": visitante,
-                    "inicio": inicio.isoformat(),
-                    "estado": "abierta",
-                    "predicciones": {},
-                    "resuelta": False,
-                }
-
-                cambiado = True
-                registro = datos["partidos"][fid]
-                print(f"PORRAS: publicada {local} - {visitante}")
-
-            except Exception as e:
-                print("PORRAS: error publicando porra:", e)
-                continue
-
-        if not registro:
-            continue
-
-        # Cierra cuando empieza o cuando la API deja de considerarlo programado.
-        if (
-            registro.get("estado") == "abierta"
-            and (ahora >= inicio or estado not in ESTADOS_PROGRAMADOS)
-        ):
-            registro["estado"] = "cerrada"
             cambiado = True
-
-        # Resuelve cuando football-data.org lo marca como finalizado/adjudicado.
-        if estado in ESTADOS_FINAL and not registro.get("resuelta"):
-            score = item.get("score") or {}
-            full_time = score.get("fullTime") or {}
-            gh = full_time.get("home")
-            ga = full_time.get("away")
-
-            if gh is None or ga is None:
-                continue
-
-            await _resolver(context, datos, registro, int(gh), int(ga))
-            registro["resuelta"] = True
-            registro["estado"] = "resuelta"
-            registro["resultado"] = f"{gh}-{ga}"
-            cambiado = True
-
-        # Anula si el partido se aplaza, cancela o suspende.
-        if (
-            estado in ESTADOS_CANCELADOS
-            and registro.get("estado") not in {"cancelada", "resuelta"}
-        ):
-            registro["estado"] = "cancelada"
-            cambiado = True
-
-            try:
-                await context.bot.send_message(
-                    chat_id=registro["chat_id"],
-                    reply_to_message_id=registro["message_id"],
-                    text=(
-                        f"⚠️ La porra {local} - {visitante} queda anulada "
-                        f"porque el partido figura como {estado}."
-                    ),
-                )
-            except Exception as e:
-                print("PORRAS: error avisando cancelación:", e)
 
     if cambiado:
         _guardar(datos)
+
+
+async def restaurar_porras_pendientes(application) -> None:
+    """
+    Restaura la porra después de un reinicio o redeploy de Railway.
+
+    - Conserva predicciones y ranking desde /data/porras_futbol.json.
+    - Revisa cada partido ya publicado aunque el bot haya estado apagado varios días.
+    - Cierra o resuelve los partidos que hayan empezado/terminado durante el reinicio.
+    - Busca también próximas jornadas para publicar una porra si el bot vuelve
+      dentro de la ventana de 36 horas.
+    """
+    if not DATA_FILE.parent.exists():
+        print(
+            "AVISO PORRAS: /data no existe. Para sobrevivir a redeploys "
+            "de Railway necesitas un Volume persistente montado en /data."
+        )
+
+    datos = _cargar()
+    cambiado = False
+
+    # Primero recupera cualquier partido persistido que estuviera pendiente.
+    for fid, registro in list(datos.get("partidos", {}).items()):
+        if registro.get("resuelta") or registro.get("estado") == "cancelada":
+            continue
+
+        match_id = registro.get("match_id") or registro.get("fixture_id") or fid
+
+        try:
+            item = _get(f"matches/{int(match_id)}")
+        except Exception as e:
+            print(
+                f"PORRAS: no se pudo restaurar el partido {match_id}: {e}"
+            )
+            continue
+
+        if await _procesar_partido(
+            application,
+            datos,
+            item,
+            permitir_publicar=False,
+        ):
+            cambiado = True
+
+    if cambiado:
+        _guardar(datos)
+
+    # Después comprueba próximos partidos por si el bot se reinició justo
+    # cuando debía publicar una porra.
+    await revisar_porras(application)
 
 
 async def _resolver(context, datos, registro, gh, ga):
