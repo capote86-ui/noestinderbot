@@ -1,8 +1,10 @@
+import asyncio
 import json
 import os
 import random
 from datetime import datetime, timezone
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.error import BadRequest, TelegramError
@@ -13,21 +15,55 @@ from casos_tribunal import casos_tribunal
 
 CARPETA_DATOS = "/data" if os.path.isdir("/data") else "."
 ARCHIVO_TRIBUNAL = os.path.join(CARPETA_DATOS, "tribunal.json")
-
-# Grupo principal de No es Tinder. Siempre queda activado tras cualquier reinicio/deploy.
-GRUPO_PRINCIPAL_ID = -1003634987823
-
 DURACION_VOTACION_SEGUNDOS = 30 * 60
 LETRAS = ("A", "B", "C", "D")
+TZ_CANARIAS = ZoneInfo("Atlantic/Canary")
+
+# Evita que dos llamadas casi simultáneas creen dos tribunales en el mismo chat.
+_LOCKS_CHAT: dict[int, asyncio.Lock] = {}
+
+
+def _lock_chat(chat_id: int) -> asyncio.Lock:
+    if chat_id not in _LOCKS_CHAT:
+        _LOCKS_CHAT[chat_id] = asyncio.Lock()
+    return _LOCKS_CHAT[chat_id]
 
 
 def datos_vacios() -> dict[str, Any]:
     return {
-        "chat_ids": [GRUPO_PRINCIPAL_ID],
+        "chat_ids": [],
         "contador": 0,
         "casos_recientes": [],
         "activos": {},
+        "ultimo_auto_por_chat": {},
     }
+
+
+def _normalizar_chat_ids(valores) -> list[int]:
+    """
+    Convierte todos los IDs a int y elimina duplicados.
+    Corrige casos antiguos donde el mismo grupo pudiera estar guardado
+    una vez como número y otra como texto.
+    """
+    resultado = []
+    vistos = set()
+
+    if not isinstance(valores, list):
+        return resultado
+
+    for valor in valores:
+        try:
+            chat_id = int(valor)
+        except (TypeError, ValueError):
+            continue
+
+        if chat_id in vistos:
+            continue
+
+        vistos.add(chat_id)
+        resultado.append(chat_id)
+
+    return resultado
 
 
 def cargar_datos() -> dict[str, Any]:
@@ -47,20 +83,29 @@ def cargar_datos() -> dict[str, Any]:
     datos.setdefault("contador", 0)
     datos.setdefault("casos_recientes", [])
     datos.setdefault("activos", {})
+    datos.setdefault("ultimo_auto_por_chat", {})
 
-    if not isinstance(datos["chat_ids"], list):
-        datos["chat_ids"] = []
-
-    # Aunque Railway haya perdido tribunal.json, o el archivo venga sin el grupo,
-    # el Tribunal de No es Tinder se reactiva automáticamente al arrancar.
-    if GRUPO_PRINCIPAL_ID not in datos["chat_ids"]:
-        datos["chat_ids"].append(GRUPO_PRINCIPAL_ID)
+    datos["chat_ids"] = _normalizar_chat_ids(datos["chat_ids"])
 
     if not isinstance(datos["casos_recientes"], list):
         datos["casos_recientes"] = []
 
     if not isinstance(datos["activos"], dict):
         datos["activos"] = {}
+
+    if not isinstance(datos["ultimo_auto_por_chat"], dict):
+        datos["ultimo_auto_por_chat"] = {}
+
+    # Normaliza las claves del control diario a strings de enteros.
+    ultimo_normalizado = {}
+    for clave, valor in datos["ultimo_auto_por_chat"].items():
+        try:
+            clave_ok = str(int(clave))
+        except (TypeError, ValueError):
+            continue
+        if isinstance(valor, str):
+            ultimo_normalizado[clave_ok] = valor
+    datos["ultimo_auto_por_chat"] = ultimo_normalizado
 
     return datos
 
@@ -96,6 +141,10 @@ def guardar_datos() -> None:
 
 def ahora_utc_timestamp() -> int:
     return int(datetime.now(timezone.utc).timestamp())
+
+
+def fecha_canaria_hoy() -> str:
+    return datetime.now(TZ_CANARIAS).date().isoformat()
 
 
 def elegir_caso() -> tuple[int, dict[str, Any]]:
@@ -186,8 +235,10 @@ async def activar_tribunal(update: Update, admin_ids) -> None:
         )
         return
 
-    chat_id = update.effective_chat.id
+    chat_id = int(update.effective_chat.id)
     chat_ids = datos_tribunal.setdefault("chat_ids", [])
+    datos_tribunal["chat_ids"] = _normalizar_chat_ids(chat_ids)
+    chat_ids = datos_tribunal["chat_ids"]
 
     if chat_id in chat_ids:
         await update.message.reply_text(
@@ -196,6 +247,7 @@ async def activar_tribunal(update: Update, admin_ids) -> None:
         return
 
     chat_ids.append(chat_id)
+    datos_tribunal["chat_ids"] = _normalizar_chat_ids(chat_ids)
     guardar_datos()
 
     await update.message.reply_text(
@@ -211,15 +263,11 @@ async def desactivar_tribunal(update: Update, admin_ids) -> None:
         )
         return
 
-    chat_id = update.effective_chat.id
-    chat_ids = datos_tribunal.setdefault("chat_ids", [])
-
-    if chat_id == GRUPO_PRINCIPAL_ID:
-        await update.message.reply_text(
-            "🔒 El Tribunal automático está fijado permanentemente en No es Tinder. "
-            "Puedes cancelar un caso concreto con /cancelartribunal, pero el Tribunal diario seguirá activo."
-        )
-        return
+    chat_id = int(update.effective_chat.id)
+    chat_ids = _normalizar_chat_ids(
+        datos_tribunal.setdefault("chat_ids", [])
+    )
+    datos_tribunal["chat_ids"] = chat_ids
 
     if chat_id not in chat_ids:
         await update.message.reply_text(
@@ -227,7 +275,9 @@ async def desactivar_tribunal(update: Update, admin_ids) -> None:
         )
         return
 
-    chat_ids.remove(chat_id)
+    datos_tribunal["chat_ids"] = [
+        cid for cid in chat_ids if cid != chat_id
+    ]
     guardar_datos()
 
     await update.message.reply_text(
@@ -238,73 +288,122 @@ async def desactivar_tribunal(update: Update, admin_ids) -> None:
 async def iniciar_tribunal_en_chat(
     context: ContextTypes.DEFAULT_TYPE,
     chat_id: int,
-) -> None:
-    clave_chat = str(chat_id)
-    tribunal_anterior = tribunales_activos.get(clave_chat)
+) -> bool:
+    """
+    Abre un único tribunal por chat.
+    Devuelve True si creó uno nuevo y False si ya había uno activo.
+    """
+    chat_id = int(chat_id)
 
-    if tribunal_anterior:
-        fecha_cierre = int(tribunal_anterior.get("fecha_cierre", 0))
+    async with _lock_chat(chat_id):
+        clave_chat = str(chat_id)
+        tribunal_anterior = tribunales_activos.get(clave_chat)
 
-        if fecha_cierre and fecha_cierre <= ahora_utc_timestamp():
-            await cerrar_tribunal(
-                context,
-                chat_id,
-                int(tribunal_anterior["numero_caso"]),
-            )
-        else:
-            return
+        if tribunal_anterior:
+            fecha_cierre = int(tribunal_anterior.get("fecha_cierre", 0))
 
-    indice_caso, caso = elegir_caso()
+            if fecha_cierre and fecha_cierre <= ahora_utc_timestamp():
+                await cerrar_tribunal(
+                    context,
+                    chat_id,
+                    int(tribunal_anterior["numero_caso"]),
+                )
+            else:
+                return False
 
-    datos_tribunal["contador"] = int(
-        datos_tribunal.get("contador", 0)
-    ) + 1
-    numero_caso = datos_tribunal["contador"]
-    fecha_cierre = ahora_utc_timestamp() + DURACION_VOTACION_SEGUNDOS
+        # Segunda comprobación después de cerrar uno caducado.
+        if tribunales_activos.get(clave_chat):
+            return False
 
-    texto = (
-        f"⚖️ TRIBUNAL DE NO ES TINDER\n"
-        f"📂 Caso nº {numero_caso}\n\n"
-        f"{caso['pregunta']}\n\n"
-        f"A) {caso['opciones'][0]}\n"
-        f"B) {caso['opciones'][1]}\n"
-        f"C) {caso['opciones'][2]}\n"
-        f"D) {caso['opciones'][3]}\n\n"
-        f"⏱️ Tenéis 30 minutos para votar.\n"
-        f"Podéis cambiar vuestro voto mientras el caso siga abierto.\n"
-        f"El voto es privado y no llena el chat."
-    )
+        indice_caso, caso = elegir_caso()
 
-    mensaje = await context.bot.send_message(
-        chat_id=chat_id,
-        text=texto,
-        reply_markup=crear_teclado(chat_id, numero_caso),
-    )
+        datos_tribunal["contador"] = int(
+            datos_tribunal.get("contador", 0)
+        ) + 1
+        numero_caso = datos_tribunal["contador"]
+        fecha_cierre = ahora_utc_timestamp() + DURACION_VOTACION_SEGUNDOS
 
-    tribunales_activos[clave_chat] = {
-        "numero_caso": numero_caso,
-        "indice_caso": indice_caso,
-        "mensaje_id": mensaje.message_id,
-        "votos": {},
-        "fecha_cierre": fecha_cierre,
-    }
+        texto = (
+            f"⚖️ TRIBUNAL DE NO ES TINDER\n"
+            f"📂 Caso nº {numero_caso}\n\n"
+            f"{caso['pregunta']}\n\n"
+            f"A) {caso['opciones'][0]}\n"
+            f"B) {caso['opciones'][1]}\n"
+            f"C) {caso['opciones'][2]}\n"
+            f"D) {caso['opciones'][3]}\n\n"
+            f"⏱️ Tenéis 30 minutos para votar.\n"
+            f"Podéis cambiar vuestro voto mientras el caso siga abierto.\n"
+            f"El voto es privado y no llena el chat."
+        )
 
-    guardar_datos()
+        mensaje = await context.bot.send_message(
+            chat_id=chat_id,
+            text=texto,
+            reply_markup=crear_teclado(chat_id, numero_caso),
+        )
 
-    programar_cierre(
-        context,
-        chat_id,
-        numero_caso,
-        DURACION_VOTACION_SEGUNDOS,
-    )
+        tribunales_activos[clave_chat] = {
+            "numero_caso": numero_caso,
+            "indice_caso": indice_caso,
+            "mensaje_id": mensaje.message_id,
+            "votos": {},
+            "fecha_cierre": fecha_cierre,
+        }
+
+        guardar_datos()
+
+        programar_cierre(
+            context,
+            chat_id,
+            numero_caso,
+            DURACION_VOTACION_SEGUNDOS,
+        )
+
+        return True
 
 
 async def publicar_tribunal(
     context: ContextTypes.DEFAULT_TYPE,
 ) -> None:
-    for chat_id in list(datos_tribunal.get("chat_ids", [])):
+    """
+    Publicación automática diaria.
+    - Normaliza y elimina IDs duplicados.
+    - No publica más de un tribunal automático por grupo y día.
+    - Si ya hay uno activo, no abre otro.
+    """
+    chat_ids = _normalizar_chat_ids(
+        datos_tribunal.get("chat_ids", [])
+    )
+    datos_tribunal["chat_ids"] = chat_ids
+
+    hoy = fecha_canaria_hoy()
+    ultimo_auto = datos_tribunal.setdefault(
+        "ultimo_auto_por_chat",
+        {}
+    )
+
+    guardar_datos()
+
+    for chat_id in chat_ids:
+        clave_chat = str(chat_id)
+
+        # Blindaje extra por día.
+        if ultimo_auto.get(clave_chat) == hoy:
+            print(
+                f"TRIBUNAL: omitido duplicado automático en {chat_id} ({hoy})"
+            )
+            continue
+
         try:
-            await iniciar_tribunal_en_chat(context, int(chat_id))
+            creado = await iniciar_tribunal_en_chat(
+                context,
+                chat_id,
+            )
+
+            if creado:
+                ultimo_auto[clave_chat] = hoy
+                guardar_datos()
+
         except Exception as error:
             print(
                 f"No se pudo publicar el Tribunal en {chat_id}: {error}"
@@ -322,7 +421,7 @@ async def lanzar_tribunal_manual(
         )
         return
 
-    chat_id = update.effective_chat.id
+    chat_id = int(update.effective_chat.id)
     clave_chat = str(chat_id)
     tribunal = tribunales_activos.get(clave_chat)
 
@@ -342,7 +441,11 @@ async def lanzar_tribunal_manual(
             return
 
     try:
-        await iniciar_tribunal_en_chat(context, chat_id)
+        creado = await iniciar_tribunal_en_chat(context, chat_id)
+        if not creado:
+            await update.message.reply_text(
+                "⚖️ Ya hay un caso del Tribunal abierto."
+            )
     except Exception as error:
         print(f"No se pudo abrir el Tribunal manualmente: {error}")
         await update.message.reply_text(
@@ -479,7 +582,6 @@ async def cerrar_tribunal(
     def porcentaje(letra: str) -> int:
         if total == 0:
             return 0
-
         return round((conteo[letra] / total) * 100)
 
     texto = (
@@ -555,7 +657,7 @@ async def cancelar_tribunal(
         )
         return
 
-    chat_id = update.effective_chat.id
+    chat_id = int(update.effective_chat.id)
     clave_chat = str(chat_id)
     tribunal = tribunales_activos.get(clave_chat)
 
@@ -593,17 +695,13 @@ async def cancelar_tribunal(
 
 async def restaurar_tribunales_pendientes(application) -> None:
     """
-    Restaura los cierres pendientes después de un reinicio de Railway.
-
-    Para utilizar esta protección, en bot.py hay que construir la aplicación así:
-
-    app = (
-        Application.builder()
-        .token(TOKEN)
-        .post_init(restaurar_tribunales_pendientes)
-        .build()
-    )
+    Restaura cierres pendientes después de un reinicio de Railway
+    y sanea duplicados antiguos de chat_ids.
     """
+    datos_tribunal["chat_ids"] = _normalizar_chat_ids(
+        datos_tribunal.get("chat_ids", [])
+    )
+
     ahora = ahora_utc_timestamp()
 
     for clave_chat, tribunal in list(tribunales_activos.items()):
