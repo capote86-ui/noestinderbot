@@ -69,6 +69,7 @@ from misa_domingo import (
 TOKEN = os.getenv("BOT_TOKEN")
 print("TOKEN CARGADO:", bool(TOKEN))
 print("API:", os.getenv("OPENAI_API_KEY"))
+print("API_FOOTBALL_KEY CARGADA:", bool(os.getenv("API_FOOTBALL_KEY")))
 respuestas = {
 
 "buenos dias": [
