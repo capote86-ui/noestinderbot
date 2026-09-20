@@ -46,6 +46,7 @@ from secretos import (
     inicio_privado_secretos,
     restaurar_secretos_pendientes,
 )
+from porras import procesar_prediccion_porra, revisar_porras, ranking_porras, estado_porras
 from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
 from cumpleanos import (
     activar_cumpleanos,
@@ -490,6 +491,9 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     "🚫 Este comando solo pueden utilizarlo los administradores."
                 )
                 return
+    if await procesar_prediccion_porra(update, context):
+        return
+
     if await procesar_mensaje_impostor(update, context):
         return
         
@@ -1006,6 +1010,14 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await ranking_secretos(update, context)
         return
 
+    if comando == "rankingporra":
+        await ranking_porras(update, context)
+        return
+
+    if comando == "estadoporra":
+        await estado_porras(update, context)
+        return
+
     if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
@@ -1348,7 +1360,8 @@ COMANDOS_SOLO_ADMINS = {
     "test",
     "activartests",
     "desactivartests",
-    "cancelartest"
+    "cancelartest",
+    "estadoporra"
 }
 
 RAQUEL_ID = 1176046170
@@ -1491,4 +1504,10 @@ app.job_queue.run_daily(
         .timetz(),
     days=(3,)
 )
+app.job_queue.run_repeating(
+    revisar_porras,
+    interval=1800,
+    first=30
+)
+
 app.run_polling()
