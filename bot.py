@@ -46,7 +46,13 @@ from secretos import (
     inicio_privado_secretos,
     restaurar_secretos_pendientes,
 )
-from porras import procesar_prediccion_porra, revisar_porras, ranking_porras, estado_porras
+from porras import (
+    procesar_prediccion_porra,
+    revisar_porras,
+    ranking_porras,
+    estado_porras,
+    restaurar_porras_pendientes,
+)
 from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
 from cumpleanos import (
     activar_cumpleanos,
@@ -1394,6 +1400,7 @@ async def revisar_silencios(context: ContextTypes.DEFAULT_TYPE):
 async def inicializar_bot(application):
     await restaurar_tribunales_pendientes(application)
     await restaurar_secretos_pendientes(application)
+    await restaurar_porras_pendientes(application)
 
 
 app = (
