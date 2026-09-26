@@ -1,127 +1,96 @@
-    registro = None
+import json
+import os
+import re
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime, timedelta
+from pathlib import Path
+from zoneinfo import ZoneInfo
 
-    for p in datos["partidos"].values():
-        if p.get("message_id") == reply_id and p.get("chat_id") == chat_id:
-            registro = p
-            break
+# football-data.org API v4
+API_BASE = "https://api.football-data.org/v4"
+COMPETICIONES = [
+    {"nombre": "LaLiga", "codigo": "PD", "busqueda": None},
+    {"nombre": "Champions League", "codigo": "CL", "busqueda": None},
+    {"nombre": "UEFA Nations League", "codigo": None, "busqueda": "UEFA Nations League"},
+]
 
-    if not registro:
-        return False
+TZ = ZoneInfo("Atlantic/Canary")
+GRUPO_PRINCIPAL_ID = -1003634987823
+DATA_FILE = Path("/data/porras_futbol.json")
+PUBLICAR_HORAS_ANTES = 36
 
-    if registro.get("estado") != "abierta":
-        await msg.reply_text("🔒 Esta porra ya está cerrada.")
-        return True
+ESTADOS_PROGRAMADOS = {"SCHEDULED", "TIMED"}
+ESTADOS_FINAL = {"FINISHED", "AWARDED"}
+ESTADOS_CANCELADOS = {"POSTPONED", "CANCELLED", "SUSPENDED"}
 
+PATRON = re.compile(r"^\s*(\d{1,2})\s*[-–—]\s*(\d{1,2})\s*$")
+
+
+def _api_token():
+    return os.getenv("FOOTBALL_DATA_TOKEN")
+
+
+def _vacio():
+    return {"partidos": {}, "ranking": {}}
+
+
+def _cargar():
     try:
-        inicio = datetime.fromisoformat(registro["inicio"])
-        if datetime.now(TZ) >= inicio:
-            registro["estado"] = "cerrada"
-            _guardar(datos)
-            await msg.reply_text(
-                "🔒 El partido ya ha empezado. Esta porra está cerrada."
-            )
-            return True
-    except Exception:
-        pass
-
-    goles_local = int(match.group(1))
-    goles_visitante = int(match.group(2))
-    resultado = f"{goles_local}-{goles_visitante}"
-
-    uid = str(update.effective_user.id)
-    nombre = _nombre(update.effective_user)
-    anterior = registro.setdefault("predicciones", {}).get(uid)
-
-    registro["predicciones"][uid] = {
-        "nombre": nombre,
-        "resultado": resultado,
-        "fecha": datetime.now(TZ).isoformat(),
-    }
-
-    _guardar(datos)
-
-    if anterior:
-        await msg.reply_text(
-            f"🔄 {nombre}, predicción actualizada: {resultado} ⚽"
-        )
-    else:
-        await msg.reply_text(
-            f"✅ {nombre}, predicción guardada: {resultado} ⚽"
-        )
-
-    return True
+        if DATA_FILE.exists():
+            with DATA_FILE.open("r", encoding="utf-8") as f:
+                datos = json.load(f)
+                datos.setdefault("partidos", {})
+                datos.setdefault("ranking", {})
+                return datos
+    except Exception as e:
+        print("PORRAS: no se pudo cargar el JSON:", e)
+    return _vacio()
 
 
-async def ranking_porras(update, context):
-    datos = _cargar()
-
-    ranking = sorted(
-        datos.get("ranking", {}).values(),
-        key=lambda x: (
-            -int(x.get("puntos", 0)),
-            x.get("nombre", "")
-        ),
-    )
-
-    if not ranking:
-        await update.message.reply_text(
-            "⚽ Todavía no hay puntos en la porra de LaLiga."
-        )
-        return
-
-    texto = "🏆 RANKING DE LA PORRA · LALIGA\n\n"
-    medallas = ["🥇", "🥈", "🥉"]
-
-    for i, fila in enumerate(ranking[:15], start=1):
-        icono = medallas[i - 1] if i <= 3 else f"{i}."
-        texto += (
-            f"{icono} {fila.get('nombre', 'Alguien')} — "
-            f"{fila.get('puntos', 0)} punto(s)\n"
-        )
-
-    await update.message.reply_text(texto)
+def _guardar(datos):
+    try:
+        DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+        tmp = DATA_FILE.with_suffix(".tmp")
+        with tmp.open("w", encoding="utf-8") as f:
+            json.dump(datos, f, ensure_ascii=False, indent=2)
+        tmp.replace(DATA_FILE)
+    except Exception as e:
+        print("PORRAS: no se pudo guardar el JSON:", e)
 
 
-async def estado_porras(update, context):
-    """Diagnóstico de las competiciones configuradas."""
+def _get(endpoint, params=None):
     token = _api_token()
     if not token:
-        await update.message.reply_text("❌ No encuentro FOOTBALL_DATA_TOKEN en Railway.")
-        return
+        raise RuntimeError("Falta la variable FOOTBALL_DATA_TOKEN en Railway")
 
-    ahora = datetime.now(TZ)
-    lineas = ["⚽ ESTADO DE LAS PORRAS\n"]
+    url = f"{API_BASE}/{endpoint.lstrip('/')}"
+    if params:
+        url += "?" + urllib.parse.urlencode(params)
 
-    for config in COMPETICIONES:
-        identificador = _resolver_competicion(config)
+    req = urllib.request.Request(
+        url,
+        headers={
+            "X-Auth-Token": token,
+            "Accept": "application/json",
+        },
+    )
 
-        if not identificador:
-            lineas.append(f"⚠️ {config['nombre']}: no localizada por la API.")
-            continue
-
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return json.loads(r.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
         try:
-            payload = _get(
-                f"competitions/{identificador}/matches",
-                {
-                    "dateFrom": ahora.date().isoformat(),
-                    "dateTo": (ahora.date() + timedelta(days=2)).isoformat(),
-                },
-            )
-            partidos = payload.get("matches", [])
-        except Exception as e:
-            if _es_recurso_restringido(e):
-                lineas.append(f"🔒 {config['nombre']}: no incluida en tu plan actual.")
-            else:
-                lineas.append(f"❌ {config['nombre']}: {e}")
-            continue
+            cuerpo = e.read().decode("utf-8")
+            detalle = json.loads(cuerpo)
+        except Exception:
+            detalle = str(e)
+        raise RuntimeError(f"football-data.org HTTP {e.code}: {detalle}") from e
+    except urllib.error.URLError as e:
+        raise RuntimeError(f"No se pudo conectar con football-data.org: {e.reason}") from e
 
-        if not partidos:
-            lineas.append(f"✅ {config['nombre']}: conecta bien; sin partidos en 48 h.")
-            continue
 
-        lineas.append(f"✅ {config['nombre']}:")
-        for item in partidos[:6]:
-            try:
-                dt = _parsear_fecha_utc(item["utcDate"])
-            except Exception:
-                continue
+def _parsear_fecha_utc(fecha):
+    # football-data.org devuelve fechas tipo 2026-09-20T19:00:00Z
+    return datetime.fromisoformat(fecha.replace("Z", "+00:00")).astimezone(TZ)
