@@ -45,7 +45,6 @@ from secretos import (
     botones_secretos,
     inicio_privado_secretos,
     restaurar_secretos_pendientes,
-    forzar_porra,
 )
 from porras import (
     procesar_prediccion_porra,
@@ -53,6 +52,7 @@ from porras import (
     ranking_porras,
     estado_porras,
     restaurar_porras_pendientes,
+    forzar_porra,
 )
 from fichas import guardar_ficha_admin, mostrar_ficha, borrar_ficha_admin
 from cumpleanos import (
