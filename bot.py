@@ -45,6 +45,7 @@ from secretos import (
     botones_secretos,
     inicio_privado_secretos,
     restaurar_secretos_pendientes,
+    forzar_porra,
 )
 from porras import (
     procesar_prediccion_porra,
@@ -1025,6 +1026,10 @@ async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await estado_porras(update, context)
         return
 
+    if comando == "forzarporra":
+        await forzar_porra(update, context)
+        return
+
     if mensaje.startswith("!trivial") or mensaje.startswith("/trivial"):
         admins = await context.bot.get_chat_administrators(chat_id)
         admin_ids = [admin.user.id for admin in admins]
@@ -1368,6 +1373,7 @@ COMANDOS_SOLO_ADMINS = {
     "activartests",
     "desactivartests",
     "cancelartest",
+    "forzarporra",
     "estadoporra"
 }
 
